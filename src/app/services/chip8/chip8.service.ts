@@ -16,8 +16,8 @@ export class Chip8Service {
     this._chip8Core.insertRom(rom);
   }
 
-  getNextFrame(): number[][] {
-    this._chip8Core.execute_cycle();
-    return this._chip8Core.getFrame();
+  getNextFrame(core: Chip8Core): number[][] {
+    core.execute_cycle();
+    return core.getFrame();
   }
 }
