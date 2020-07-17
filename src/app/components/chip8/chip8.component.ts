@@ -30,15 +30,12 @@ export class Chip8Component implements OnInit, AfterViewInit {
     
     fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
         const raw: ArrayBuffer = e.target.result as ArrayBuffer;
-        console.log(raw);
         this.loadedRom  = this.readRawRom(raw);
         let stringRom = [];
 
         for(let i = 0; i < this.loadedRom.length; i++) {
           stringRom[i] = this.loadedRom[i].toString(16);
         }
-
-        console.log(stringRom);
     };
 
     fileReader.readAsArrayBuffer(files.item(0))

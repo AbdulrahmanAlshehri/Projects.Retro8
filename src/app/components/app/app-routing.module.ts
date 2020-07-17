@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import { NgHelpComponent } from './ng-help/ng-help.component';
-import { Chip8Component } from './chip8/chip8.component';
+import { NgHelpComponent } from '../ng-help/ng-help.component';
+import { Chip8Component } from '../chip8/chip8.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/chip8', pathMatch: 'full'},
