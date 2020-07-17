@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Chip8Instruction } from 'src/models/chip8Instruction';
 
 @Component({
   selector: 'app-chip8',
@@ -28,21 +27,28 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   handleRomLoad(files: FileList) {
     const fileReader: FileReader = new FileReader();
+    
     fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
-        const raw: string = e.target.result as string;
-        let inustrction: Chip8Instruction = new Chip8Instruction(raw.slice(0, 2));
-        // this.loadedRom  = this.readRawRom(raw)
-        console.log(inustrction);
+        const raw: ArrayBuffer = e.target.result as ArrayBuffer;
+        console.log(raw);
+        this.loadedRom  = this.readRawRom(raw);
+        let stringRom = [];
+
+        for(let i = 0; i < this.loadedRom.length; i++) {
+          stringRom[i] = this.loadedRom[i].toString(16);
+        }
+
+        console.log(stringRom);
     };
-    files.item(0).text().then(r => console.log(r));
-    fileReader.readAsBinaryString(files.item(0))
+
+    fileReader.readAsArrayBuffer(files.item(0))
   }
 
   readRawRom(arrayBuffer: ArrayBuffer) {
     const dataView: DataView = new DataView(arrayBuffer);
     let bigEndianArray = new Uint16Array(80);
-    for(let i = 0; i < 80; i++)
-    bigEndianArray[i] =  dataView.getUint16(i, false)
+    for(let i = 0; i < 160; i=i+2)
+    bigEndianArray[Math.ceil(i/2)] =  dataView.getUint16(i, false)
     return bigEndianArray;
   };
 
