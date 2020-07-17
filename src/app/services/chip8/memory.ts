@@ -41,10 +41,27 @@ export class Memory {
         console.log(memoryString);
     }
 
+    getInstructionAtAddress(address: number): string {
+        let firstByte: string = this._memory[address].toString(16);
+        let secondByte: string = this._memory[address+1].toString(16);
+
+        if(firstByte.length == 1) {
+            firstByte = '0' + firstByte;
+        }
+
+        if(secondByte.length == 1) {
+            secondByte = '0' + secondByte;
+        }
+
+        return firstByte.toUpperCase() + secondByte.toUpperCase();
+    }
+
     async loadFontSet() {
         const fontset = await fetch('assets/FONTSET.chip8').then(res => {
             return res.arrayBuffer()
         });
         this.FONT_SET = new Uint8Array(fontset);
     }
+
+
 }
