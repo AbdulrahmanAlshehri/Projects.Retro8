@@ -26,7 +26,6 @@ export class Chip8Core {
 
     insertRom(rom: Uint8Array) {
         this._memory.loadRom(rom);
-        setInterval(_ => this.execute_cycle(), 500);
     }
 
     incrementProgramCounter() {
@@ -266,5 +265,9 @@ export class Chip8Core {
         }
 
         return instructionFunction;
+    }
+
+    getFrame() {
+        return this._frameBuffer.currentFrame;
     }
 }

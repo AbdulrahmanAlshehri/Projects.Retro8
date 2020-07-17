@@ -32,13 +32,9 @@ export class Memory {
     stringifyMemory() {
         let memoryString: string[] = [];
         
-        console.log(typeof(this._memory[0]));
-
         for(let i = 0; i < this._memory.length; i++) {
            memoryString[i] = this._memory[i].toString(16);
         }
-
-        console.log(memoryString);
     }
 
     getInstructionAtAddress(address: number): string {

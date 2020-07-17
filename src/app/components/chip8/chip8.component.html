@@ -6,5 +6,10 @@
     <input type="file" id="inputRom" name="inputRom" (change)="handleRomLoad($event.target.files)"/>
 </div>
 <div>
-    <canvas #display width="128" height="64"></canvas>
+    <div class="controls">
+        <input type="button" value="start" (click)="onStartClick()">
+        <input type="button" value="NextFrame" (click)="onNextFrameClick()">
+        <input type="button" value="stop" (click)="onStopClick()">
+    </div>
+    <canvas #display width="1024" height="512"></canvas>
 </div>
