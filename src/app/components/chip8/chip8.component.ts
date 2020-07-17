@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Chip8Service } from 'src/app/services/chip8/chip8.service';
 
 @Component({
   selector: 'app-chip8',
@@ -10,11 +11,11 @@ export class Chip8Component implements OnInit, AfterViewInit {
   @ViewChild('display')
   display: ElementRef<HTMLCanvasElement>;
 
-  loadedRom: Uint16Array = null;
-
   public context: CanvasRenderingContext2D;
 
-  constructor() { }
+  constructor(
+    private chip8Service: Chip8Service
+  ) { }
 
   ngOnInit(): void {
   }
@@ -29,24 +30,23 @@ export class Chip8Component implements OnInit, AfterViewInit {
     const fileReader: FileReader = new FileReader();
     
     fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
-        const raw: ArrayBuffer = e.target.result as ArrayBuffer;
-        this.loadedRom  = this.readRawRom(raw);
-        let stringRom = [];
-
-        for(let i = 0; i < this.loadedRom.length; i++) {
-          stringRom[i] = this.loadedRom[i].toString(16);
-        }
+      const raw: ArrayBuffer = e.target.result as ArrayBuffer;
+      // let stringRom: string[] = [];
+      
+      // for(let i = 0; i < this.loadedRom.length; i++) {
+      //   stringRom[i] = this.loadedRom[i].toString(16);
+      // }
+      
+      this.chip8Service.insertRom(this.readRawRom(raw));
     };
 
-    fileReader.readAsArrayBuffer(files.item(0))
+    fileReader.readAsArrayBuffer(files.item(0));
+    
   }
 
   readRawRom(arrayBuffer: ArrayBuffer) {
-    const dataView: DataView = new DataView(arrayBuffer);
-    let bigEndianArray = new Uint16Array(80);
-    for(let i = 0; i < 160; i=i+2)
-    bigEndianArray[Math.ceil(i/2)] =  dataView.getUint16(i, false)
-    return bigEndianArray;
+    let romArray = new Uint8Array(arrayBuffer);
+    return romArray;
   };
 
 }
