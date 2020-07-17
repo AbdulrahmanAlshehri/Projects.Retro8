@@ -16,10 +16,10 @@ export class FrameBuffer {
 
     constructor() {
         this.currentFrame = new Array<Array<number>>()
-        this.initFrameBuffer();
+        this.clearFrameBuffer();
     }
 
-    initFrameBuffer() {
+    clearFrameBuffer() {
         for(let i = 0; i < this.FRAME_WIDTH; i++) {
             this.currentFrame[i] = new Array<number>();
             for(let j = 0; j < this.FRAME_HEIGHT; j++) {

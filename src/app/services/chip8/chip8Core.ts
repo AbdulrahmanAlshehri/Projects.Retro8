@@ -55,11 +55,13 @@ export class Chip8Core {
                     case '0E0':
                         instructionFunction = () => {
                             console.log(`${insturction}: clear`);
+                            this._frameBuffer.clearFrameBuffer();
                         }
                         break;
                     case '0EE':
                         instructionFunction = () => {
                             console.log(`${insturction}: return;`);
+                            this._programCounter = this._stack.pop();
                         }
                         break;
                     case '000':
@@ -77,36 +79,50 @@ export class Chip8Core {
             case '1':
                 instructionFunction = () => {
                     console.log(`${insturction}: Jump $${i3}`);
+                    this._programCounter = parseInt(i3, 16);
                 }
                 break;
             case '2':
                 instructionFunction = () => {
                     console.log(`${insturction}: Call $${i3}`);
+                    this._stack.push(this._programCounter);
+                    this._programCounter = parseInt(i3, 16);
                 }
                 break;
             case '3':
                 instructionFunction = () => {
                     console.log(`${insturction}: Skip if(V[${x}]==0x${i2})`);
+                    if(this._registers.getVRegister(parseInt(x, 16)) === parseInt(i2, 16)) {
+                        this.incrementProgramCounter()
+                    }
                 }
                 break;
             case '4':
                 instructionFunction = () => {
                     console.log(`${insturction}: Skip if(V[${x}]!=0x${i2})`);
+                    if(this._registers.getVRegister(parseInt(x, 16)) !== parseInt(i2, 16)) {
+                        this.incrementProgramCounter();
+                    }
                 }
                 break;
             case '5':
                 instructionFunction = () => {
                     console.log(`${insturction}: Skip if(V[${x}]==V[${y})]`);
+                    if(this._registers.getVRegister(parseInt(x, 16)) === this._registers.getVRegister(parseInt(y, 16))) {
+                        this.incrementProgramCounter();
+                    }
                 }
                 break;
             case '6':
                 instructionFunction = () => {
                     console.log(`${insturction}: Set v[${x}] = 0x${i2}`);
+                    this._registers.setVRegister(parseInt(x, 16), parseInt(i2, 16));
                 }
                 break;
             case '7':
                 instructionFunction = () => {
                     console.log(`${insturction}: Set v[${x}] += 0x${i2}`);
+                    this._registers.setVRegister(parseInt(x, 16), this._registers.getVRegister(parseInt(x, 16) + parseInt(i2, 16)));
                 }
                 break;
             case '8':
