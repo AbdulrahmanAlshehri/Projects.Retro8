@@ -16,16 +16,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'ngChip8'`, () => {
+  it(`should have as title 'Emulation Station'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('ngChip8');
+    expect(app.title).toEqual('Emulation Station');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('#title').textContent).toContain('ngChip8');
+    expect(compiled.querySelector('#title').textContent).toContain('Emulation Station');
   });
 });

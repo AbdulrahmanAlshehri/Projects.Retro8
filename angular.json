@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngChip8": {
+    "emulation-station": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngChip8",
+            "outputPath": "dist/emulation-station",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngChip8:build"
+            "browserTarget": "emulation-station:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngChip8:build:production"
+              "browserTarget": "emulation-station:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngChip8:build"
+            "browserTarget": "emulation-station:build"
           }
         },
         "test": {
@@ -110,15 +110,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ngChip8:serve"
+            "devServerTarget": "emulation-station:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ngChip8:serve:production"
+              "devServerTarget": "emulation-station:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "ngChip8"
+  "defaultProject": "emulation-station"
 }

@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('ngChip8 app is running!');
+    expect(page.getTitleText()).toEqual('emulation-station app is running!');
   });
 
   afterEach(async () => {
