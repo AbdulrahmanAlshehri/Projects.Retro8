@@ -23,6 +23,14 @@ export class Registers {
     }
     private _I: number;
 
+    get I() {
+        return this._I;
+    }
+
+    set I(value: number) {
+        this._I = value;
+    }
+
     private REGISTERS_COUNT = 16;
 
     constructor() {
