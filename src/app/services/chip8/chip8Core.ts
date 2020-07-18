@@ -16,6 +16,8 @@ export class Chip8Core {
 
     public isRomLoaded: boolean = false;
 
+    public isHalted: boolean = false;
+
 
     constructor() {
         this._memory = new Memory();
@@ -40,8 +42,11 @@ export class Chip8Core {
 
         const instructionFunction: Function = this.decodeInstruction(currentInsturction);
 
-        instructionFunction();
-        this.incrementProgramCounter();
+        if(!this.isHalted) {
+            instructionFunction();
+            this.incrementProgramCounter();
+        }
+
     }
 
     decodeInstruction(insturction: string): Function {
@@ -304,8 +309,10 @@ export class Chip8Core {
                         break;
                     case '0A':
                         instructionFunction = () => {
-                            //TODO
+                            //TODO: halt and wait for input
                             console.log(`${insturction}: Set V[${x}] = key`);
+                            console.log('waiting for input');
+                            this.isHalted = true;
                         }
                         break;
                     case '15':
@@ -379,5 +386,12 @@ export class Chip8Core {
 
     logMemoryDump() {
         console.log(this._memory.stringifyMemory());
+    }
+
+    setInput(key: number) {
+        this._input.setKey(key);
+        if(this.isHalted) {
+            this.isHalted = false;
+        }
     }
 }
