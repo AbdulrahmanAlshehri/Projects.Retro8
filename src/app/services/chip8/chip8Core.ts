@@ -32,7 +32,7 @@ export class Chip8Core {
         this._programCounter = this._programCounter + 2;
     }
 
-    execute_cycle() {
+    executeCycle() {
         const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
 
         const instructionFunction: Function = this.decodeInstruction(currentInsturction);
@@ -48,7 +48,34 @@ export class Chip8Core {
         let i3 = parseInt(insturction.substring(1), 16);
         let x = parseInt(insturction[1], 16);
         let y = parseInt(insturction[2], 16);
-        console.table({i1: i1,i2: i2,i3: i3,x: x,y: y, PC: this._programCounter, instruction: insturction});
+        console.table({
+            i1: i1.toString(16),
+            i2: i2.toString(16),
+            i3: i3.toString(16),
+            x: x.toString(16),
+            y: y.toString(16),
+            PC: this._programCounter.toString(16),
+            instruction: insturction,
+            V0: this._registers.getVRegister(0).toString(16),
+            V1: this._registers.getVRegister(1).toString(16),
+            V2: this._registers.getVRegister(2).toString(16),
+            V3: this._registers.getVRegister(3).toString(16),
+            V4: this._registers.getVRegister(4).toString(16),
+            V5: this._registers.getVRegister(5).toString(16),
+            V6: this._registers.getVRegister(6).toString(16),
+            V7: this._registers.getVRegister(7).toString(16),
+            V8: this._registers.getVRegister(8).toString(16),
+            V9: this._registers.getVRegister(9).toString(16),
+            VA: this._registers.getVRegister(10).toString(16),
+            VB: this._registers.getVRegister(11).toString(16),
+            VC: this._registers.getVRegister(12).toString(16),
+            VD: this._registers.getVRegister(13).toString(16),
+            VE: this._registers.getVRegister(14).toString(16),
+            VF: this._registers.getVRegister(15).toString(16),
+            I: this._registers.I.toString(16),
+            DT: this._registers.delayRegister.toString(16),
+            ST: this._registers.soundRegister.toString(16)
+        });
         switch (insturction[0]) {
             case '0':
                 switch(i3.toString(16).toUpperCase()){

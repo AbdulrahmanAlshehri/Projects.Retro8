@@ -17,7 +17,7 @@ export class Chip8Service {
   }
 
   getNextFrame(core: Chip8Core): number[][] {
-    core.execute_cycle();
+    core.executeCycle();
     return core.getFrame();
   }
 }
