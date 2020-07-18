@@ -17,6 +17,8 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   private _currentFrame: number[][];
 
+  private _currentRom: Uint8Array;
+
   constructor(
     private chip8Service: Chip8Service
   ) { }
@@ -38,7 +40,7 @@ export class Chip8Component implements OnInit, AfterViewInit {
     fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
       const raw: ArrayBuffer = e.target.result as ArrayBuffer;
 
-      this.chip8Service.insertRom(this.readRawRom(raw));
+      this._currentRom = this.readRawRom(raw);
     };
 
     fileReader.readAsArrayBuffer(files.item(0));
@@ -51,6 +53,7 @@ export class Chip8Component implements OnInit, AfterViewInit {
   };
 
   onStartClick(){
+    this.chip8Service.insertRom(this._currentRom);
     this._animationLoop = setInterval(() => {
       this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
       this.drawFrame(this._currentFrame);
@@ -58,6 +61,10 @@ export class Chip8Component implements OnInit, AfterViewInit {
   }
 
   onNextFrameClick() {
+    if(!this.chip8Service._chip8Core.isRomLoaded) {
+      this.chip8Service.insertRom(this._currentRom);
+    }
+
     this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
 
     this.drawFrame(this._currentFrame);
@@ -65,6 +72,10 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   onStopClick(){
     clearInterval(this._animationLoop);
+  }
+
+  onResetClick() {
+    this.chip8Service.resetCore();
   }
 
   drawFrame(frame: number[][]) {

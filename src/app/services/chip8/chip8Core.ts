@@ -14,6 +14,8 @@ export class Chip8Core {
     private _programCounter: number;
     private PROGRAM_COUNTER_INITIAL_VALUE = 512;
 
+    public isRomLoaded: boolean = false;
+
 
     constructor() {
         this._memory = new Memory();
@@ -26,6 +28,7 @@ export class Chip8Core {
 
     insertRom(rom: Uint8Array) {
         this._memory.loadRom(rom);
+        this.isRomLoaded = true;
     }
 
     incrementProgramCounter() {
@@ -43,11 +46,14 @@ export class Chip8Core {
 
     decodeInstruction(insturction: string): Function {
         let instructionFunction: Function;
-        let i1 = parseInt(insturction.substring(3), 16);
-        let i2 = parseInt(insturction.substring(2), 16);
-        let i3 = parseInt(insturction.substring(1), 16);
-        let x = parseInt(insturction[1], 16);
-        let y = parseInt(insturction[2], 16);
+        const i1 = parseInt(insturction.substring(3), 16);
+        const i2 = parseInt(insturction.substring(2), 16);
+        const i3 = parseInt(insturction.substring(1), 16);
+        const n1 = insturction.substring(3);
+        const n2 = insturction.substring(2);
+        const n3 = insturction.substring(1);
+        const x = parseInt(insturction[1], 16);
+        const y = parseInt(insturction[2], 16);
         console.table({
             i1: i1.toString(16),
             i2: i2.toString(16),
@@ -78,7 +84,7 @@ export class Chip8Core {
         });
         switch (insturction[0]) {
             case '0':
-                switch(i3.toString(16).toUpperCase()){
+                switch(n3){
                     case '0E0':
                         instructionFunction = () => {
                             console.log(`${insturction}: clear`);
@@ -118,7 +124,7 @@ export class Chip8Core {
                 break;
             case '3':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Skip if(V[${x}]==0x${i2})`);
+                    console.log(`${insturction}: Skip if(V[${x}]==0x${n2})`);
                     if(this._registers.getVRegister(x) === i2) {
                         this.incrementProgramCounter()
                     }
@@ -126,7 +132,7 @@ export class Chip8Core {
                 break;
             case '4':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Skip if(V[${x}]!=0x${i2})`);
+                    console.log(`${insturction}: Skip if(V[${x}]!=0x${n2})`);
                     if(this._registers.getVRegister(x) !== i2) {
                         this.incrementProgramCounter();
                     }
@@ -142,14 +148,16 @@ export class Chip8Core {
                 break;
             case '6':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Set v[${x}] = 0x${i2}`);
-                    this._registers.setVRegister(y, i2);
+                    console.log(`${insturction}: Set v[${x}] = 0x${n2}`);
+                    this._registers.setVRegister(x, i2);
                 }
                 break;
             case '7':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Set v[${x}] += 0x${i2}`);
-                    this._registers.setVRegister(x, this._registers.getVRegister(x + i2));
+                    //TODO: Deal with overflow case
+                    console.log(`${insturction}: Set v[${x}] += 0x${n2}`);
+                    const value = this._registers.getVRegister(x) + i2;
+                    this._registers.setVRegister(x, value);
                 }
                 break;
             case '8':
@@ -232,36 +240,38 @@ export class Chip8Core {
                 break;
             case 'A':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Set I = 0x${i3}`);
+                    console.log(`${insturction}: Set I = 0x${n3}`);
                     this._registers.I = i3;
                 }
                 break;
             case 'B':
                 instructionFunction = () => {
-                    console.log(`${insturction}: PC = V0 + 0x${i3}`);
+                    console.log(`${insturction}: PC = V0 + 0x${n3}`);
                     this._programCounter = this._registers.getVRegister(0) + i3;
                 }
                 break;
             case 'C':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Rand V[${x}] = rand & 0x${i2}`);
+                    console.log(`${insturction}: Rand V[${x}] = rand & 0x${n2}`);
                     this._registers.setVRegister(x, Math.floor(Math.random() * 255) & i2);
                 }
                 break;
             case 'D':
                 instructionFunction = () => {
-                    //TODO:
-                    console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${i1})`);
+                    //TODO: fix drawing
+                    console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${n1})`);
                     let sprite = new Uint8Array(8)
                     for(let i = 0; i < i1; i++) {
-                        sprite.set([this._memory.getValueAt(this._registers.I)], i);
-
+                        sprite.set([this._memory.getValueAt(this._registers.I + i)], i);
+                        console.log(`sprite location:  ${this._registers.I + i}`);
                     }
+                    this.logMemoryDump();
+                    console.log(sprite);
                     this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1)
                 }
                 break;
             case 'E':
-                switch(i2.toString(16).toUpperCase()) {
+                switch(n2) {
                     case '9E':
                         instructionFunction = () => {
                             console.log(`${insturction}: Skip if(key() == v[${x}])`);
@@ -285,7 +295,7 @@ export class Chip8Core {
                 }
                 break;
             case 'F':
-                switch(i2.toString().toUpperCase()) {
+                switch(n2) {
                     case '07':
                         instructionFunction = () => {
                             console.log(`${insturction}: Set V[${x}] = delay_timer`);
@@ -358,10 +368,16 @@ export class Chip8Core {
                 }
         }
 
+        console.log(instructionFunction);
+
         return instructionFunction;
     }
 
     getFrame() {
         return this._frameBuffer.currentFrame;
+    }
+
+    logMemoryDump() {
+        console.log(this._memory.stringifyMemory());
     }
 }

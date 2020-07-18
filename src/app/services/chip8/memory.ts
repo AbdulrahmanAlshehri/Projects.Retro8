@@ -35,6 +35,8 @@ export class Memory {
         for(let i = 0; i < this._memory.length; i++) {
            memoryString[i] = this._memory[i].toString(16);
         }
+
+        return memoryString;
     }
 
     getInstructionAtAddress(address: number): string {

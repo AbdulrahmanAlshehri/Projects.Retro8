@@ -28,9 +28,21 @@ export class FrameBuffer {
         }
     }
 
+    whiteFrameBuffer() {
+        for(let i = 0; i < this.FRAME_WIDTH; i++) {
+            this.currentFrame[i] = new Array<number>();
+            for(let j = 0; j < this.FRAME_HEIGHT; j++) {
+                this.currentFrame[i][j] = 1;
+            }
+        }
+    }
+
     draw(x: number, y: number, sprite: Uint8Array, byteCount: number) {
         for(let i = 0; i < byteCount; i++) {
-            const spriteString = sprite[0].toString(2);
+            let spriteString = sprite[i].toString(2);
+            while(spriteString.length < 8) {
+                spriteString = '0' + spriteString;
+            }
             for(let j = 0; j < 8; j++) {
                 if(spriteString[j] === '1') {
                     this.currentFrame[x + j][y + i] = 1;
