@@ -225,7 +225,7 @@ export class Chip8Core {
                 instructionFunction = () => {
                     //TODO:
                     console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${i1})`);
-                    let sprite = new Uint8Array()
+                    let sprite = new Uint8Array(8)
                     for(let i = 0; i < i1; i++) {
                         sprite.set([this._memory.getValueAt(this._registers.I)], i);
 

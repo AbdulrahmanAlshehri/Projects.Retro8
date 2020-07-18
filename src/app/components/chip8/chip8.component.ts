@@ -28,6 +28,8 @@ export class Chip8Component implements OnInit, AfterViewInit {
     this.context = this.display.nativeElement.getContext('2d');
     // this.context.fillStyle = 'black';
     // this.context.fillRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);
+    this.context.scale(16, 16);
+
   }
 
   handleRomLoad(files: FileList) {
@@ -66,7 +68,7 @@ export class Chip8Component implements OnInit, AfterViewInit {
   }
 
   drawFrame(frame: number[][]) {
-    this.context.scale(16, 16)
+    this.context.clearRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);
     const frameWidth = frame.length;
     const frameHeight = frame[0].length;
     for(let i = 0; i < frameWidth; i++) {
