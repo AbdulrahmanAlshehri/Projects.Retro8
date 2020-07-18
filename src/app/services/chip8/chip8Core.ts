@@ -225,6 +225,12 @@ export class Chip8Core {
                 instructionFunction = () => {
                     //TODO:
                     console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${i1})`);
+                    let sprite = new Uint8Array()
+                    for(let i = 0; i < i1; i++) {
+                        sprite.set([this._memory.getValueAt(this._registers.I)], i);
+
+                    }
+                    this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1)
                 }
                 break;
             case 'E':
@@ -287,6 +293,7 @@ export class Chip8Core {
                     case '29':
                         instructionFunction = () => {
                             console.log(`${insturction}: Set I = sprite_addr[V[${x}]]`);
+                            this._registers.I = this._registers.getVRegister(x * 5);
                         }
                         break;
                     case '33':
@@ -297,11 +304,19 @@ export class Chip8Core {
                     case '55':
                         instructionFunction = () => {
                             console.log(`${insturction}: reg_dump(V[${x}],&I)`);
+                            for(let i = 0; i < x; i++) {
+                                this._memory.setValueAt(this._registers.I + i, this._registers.getVRegister(i));
+                                this._registers.I += x+ 1;
+                            }
                         }
                         break;
                     case '65':
                         instructionFunction = () => {
                             console.log(`${insturction}: reg_load(V[${x}],&I)`);
+                            for(let i = 0; i < x; i++) {
+                                this._registers.setVRegister(i, this._memory.getValueAt(this._registers.I + i));
+                                this._registers.I += x+ 1;
+                            }
                         }
                         break;
                     default:

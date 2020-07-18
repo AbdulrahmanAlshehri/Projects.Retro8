@@ -27,4 +27,18 @@ export class FrameBuffer {
             }
         }
     }
+
+    draw(x: number, y: number, sprite: Uint8Array, byteCount: number) {
+        for(let i = 0; i < byteCount; i++) {
+            const spriteString = sprite[0].toString(2);
+            for(let j = 0; j < 8; j++) {
+                if(spriteString[j] === '1') {
+                    this.currentFrame[x + j][y + i] = 1;
+                }
+                else {
+                    this.currentFrame[x + j][y + i] = 0;
+                }
+            }
+        }
+    }
 }

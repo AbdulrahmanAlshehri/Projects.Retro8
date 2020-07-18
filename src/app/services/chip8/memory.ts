@@ -52,6 +52,14 @@ export class Memory {
         return firstByte.toUpperCase() + secondByte.toUpperCase();
     }
 
+    getValueAt(address: number): number {
+        return this._memory[address];
+    }
+
+    setValueAt(address: number, value: number): void {
+        this._memory[address] = value;
+    }
+    
     async loadFontSet() {
         const fontset = await fetch('assets/FONTSET.chip8').then(res => {
             return res.arrayBuffer()
