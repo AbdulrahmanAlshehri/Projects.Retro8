@@ -38,15 +38,12 @@ export class Chip8Core {
     }
 
     executeCycle() {
-        const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
-
-        const instructionFunction: Function = this.decodeInstruction(currentInsturction);
-
         if(!this.isHalted) {
+            const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
+            const instructionFunction: Function = this.decodeInstruction(currentInsturction);
             instructionFunction();
             this.incrementProgramCounter();
         }
-
     }
 
     decodeInstruction(insturction: string): Function {
@@ -159,9 +156,11 @@ export class Chip8Core {
                 break;
             case '7':
                 instructionFunction = () => {
-                    //TODO: Deal with overflow case
                     console.log(`${insturction}: Set v[${x}] += 0x${n2}`);
-                    const value = this._registers.getVRegister(x) + i2;
+                    let value = this._registers.getVRegister(x) + i2;
+                    if(value >= 256) {
+                        value =  value - 255;
+                    }
                     this._registers.setVRegister(x, value);
                 }
                 break;
@@ -197,35 +196,63 @@ export class Chip8Core {
                     case '4':
                         instructionFunction = () => {
                             console.log(`${insturction}: ADD V[${x}] = V[${x}] + V[${y}]`);
-                            const res = this._registers.getVRegister(x) + this._registers.getVRegister(y);
-                            this._registers.setVRegister(x, res);
+                            let value = this._registers.getVRegister(x) + this._registers.getVRegister(y);
+                            if(value >= 256) {
+                                this._registers.setVRegister(15, 1);
+                                value =  value - 255;
+                            }
+                            this._registers.setVRegister(x, value);
                         }
                         break;
                     case '5':
                         instructionFunction = () => {
-                            console.log(`${insturction}: SUB V[${x}] = V[${y}] - V[${x}]`);
-                            const res = this._registers.getVRegister(y) - this._registers.getVRegister(x);
-                            this._registers.setVRegister(x, res);
+                            console.log(`${insturction}: SUB V[${x}] = V[${x}] - V[${y}]`);
+                            const vX = this._registers.getVRegister(x);
+                            const vY = this._registers.getVRegister(y);
+                            const value = vX - vY;
+
+                            if(vX > vY) {
+                                this._registers.setVRegister(15, 1);
+                            } else {
+                                this._registers.setVRegister(15, 0);
+                            }
+
+                            this._registers.setVRegister(x, value);
                         }
                         break;
                     case '6':
                         instructionFunction = () => {
                             console.log(`${insturction}: BitOP V[${x}] = V[${y}] >> 1`);
-                            const res = this._registers.getVRegister(y) >> 1;
+                            const vY = this._registers.getVRegister(y);
+                            const leastSignificantBit = vY % 2
+                            this._registers.setVRegister(15, leastSignificantBit);
+                            const res = vY >> 1;
                             this._registers.setVRegister(x, res);
                         }
                         break;
                     case '7':
                         instructionFunction = () => {
                             console.log(`${insturction}: SUB V[${x}] = V[${y}] - V[${x}]`);
-                            const res = this._registers.getVRegister(y) - this._registers.getVRegister(x);
-                            this._registers.setVRegister(x, res);
+                            const vX = this._registers.getVRegister(x);
+                            const vY = this._registers.getVRegister(y);
+                            const value = vY - vX;
+
+                            if(vY > vX) {
+                                this._registers.setVRegister(15, 1);
+                            } else {
+                                this._registers.setVRegister(15, 0);
+                            }
+
+                            this._registers.setVRegister(x, value);
                         }
                         break;
                     case 'E':
                         instructionFunction = () => {
                             console.log(`${insturction}: BitOP V[${x}] = V[${y}] << 1`);
-                            const res = this._registers.getVRegister(x) << 1;
+                            const vY = this._registers.getVRegister(y);
+                            const mostSignificantBit = vY > 127? 1 : 0;
+                            this._registers.setVRegister(15, mostSignificantBit);
+                            const res = vY << 1;
                             this._registers.setVRegister(x, res);
                         }
                         break;
@@ -337,30 +364,36 @@ export class Chip8Core {
                     case '29':
                         instructionFunction = () => {
                             console.log(`${insturction}: Set I = sprite_addr[V[${x}]]`);
-                            this._registers.I = this._registers.getVRegister(x * 5);
+                            this._registers.I = this._registers.getVRegister(x) * 5;
                         }
                         break;
                     case '33':
                         instructionFunction = () => {
                             console.log(`${insturction}: Set BCD(V[${x}])`);
+                            const vX: number = this._registers.getVRegister(x);
+                            const binaryString = vX.toString(10);
+                            for(let i = 0; i < binaryString.length; i++) {
+                                const currentAddress = this._registers.I + i;
+                                this._memory.setValueAt(currentAddress, parseInt(binaryString[i]));
+                            }
                         }
                         break;
                     case '55':
                         instructionFunction = () => {
                             console.log(`${insturction}: reg_dump(V[${x}],&I)`);
-                            for(let i = 0; i < x; i++) {
+                            for(let i = 0; i <= x; i++) {
                                 this._memory.setValueAt(this._registers.I + i, this._registers.getVRegister(i));
-                                this._registers.I += x+ 1;
                             }
+                            this._registers.I += x+ 1;
                         }
                         break;
                     case '65':
                         instructionFunction = () => {
                             console.log(`${insturction}: reg_load(V[${x}],&I)`);
-                            for(let i = 0; i < x; i++) {
+                            for(let i = 0; i <= x; i++) {
                                 this._registers.setVRegister(i, this._memory.getValueAt(this._registers.I + i));
-                                this._registers.I += x+ 1;
                             }
+                            this._registers.I += x+ 1;
                         }
                         break;
                     default:

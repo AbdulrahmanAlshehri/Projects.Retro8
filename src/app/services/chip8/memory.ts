@@ -51,7 +51,7 @@ export class Memory {
             secondByte = '0' + secondByte;
         }
 
-        return firstByte.toUpperCase() + secondByte.toUpperCase();
+        return (firstByte + secondByte).toUpperCase();
     }
 
     getValueAt(address: number): number {
