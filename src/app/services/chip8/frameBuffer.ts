@@ -45,12 +45,13 @@ export class FrameBuffer {
             }
             for(let j = 0; j < 8; j++) {
                 if(spriteString[j] === '1') {
-                    this.currentFrame[x + j][y + i] = 1;
+                    this.currentFrame[(x + j) % 64][(y + i) % 32] = 1 ^ this.currentFrame[(x + j) % 64][(y + i) % 32];
                 }
                 else {
-                    this.currentFrame[x + j][y + i] = 0;
+                    this.currentFrame[(x + j) % 64][(y + i) % 32] = 0 ^ this.currentFrame[(x + j) % 64][(y + i) % 32];
                 }
             }
         }
+        console.log(this._currentFrame);
     }
 }

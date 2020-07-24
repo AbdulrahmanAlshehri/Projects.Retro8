@@ -34,7 +34,7 @@ export class Chip8Core {
     }
 
     incrementProgramCounter() {
-        this._programCounter = this._programCounter + 2;
+        this._programCounter = (this._programCounter + 2) & 0x0FFF;
     }
 
     executeCycle() {
@@ -84,6 +84,7 @@ export class Chip8Core {
             DT: this._registers.delayRegister.toString(16),
             ST: this._registers.soundRegister.toString(16)
         });
+        console.log(this._memory.stringifyMemory());
         switch (insturction[0]) {
             case '0':
                 switch(n3){
@@ -158,9 +159,6 @@ export class Chip8Core {
                 instructionFunction = () => {
                     console.log(`${insturction}: Set v[${x}] += 0x${n2}`);
                     let value = this._registers.getVRegister(x) + i2;
-                    if(value >= 256) {
-                        value =  value - 255;
-                    }
                     this._registers.setVRegister(x, value);
                 }
                 break;
@@ -279,7 +277,7 @@ export class Chip8Core {
             case 'B':
                 instructionFunction = () => {
                     console.log(`${insturction}: PC = V0 + 0x${n3}`);
-                    this._programCounter = this._registers.getVRegister(0) + i3;
+                    this._programCounter = (this._registers.getVRegister(0) + i3) & 0x0FF;
                 }
                 break;
             case 'C':
@@ -292,13 +290,23 @@ export class Chip8Core {
                 instructionFunction = () => {
                     //TODO: fix drawing
                     console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${n1})`);
-                    let sprite = new Uint8Array(8)
+                    let sprite = new Uint8Array(8);
+                    let spriteText = [];
                     for(let i = 0; i < i1; i++) {
-                        sprite.set([this._memory.getValueAt(this._registers.I + i)], i);
-                        console.log(`sprite location:  ${this._registers.I + i}`);
+                        let byte = this._memory.getValueAt(this._registers.I + i);
+                        let byteText = byte.toString(2);
+                        while(byteText.length < 8) {
+                            byteText = '0' + byteText;
+                        }
+
+                        sprite.set([byte], i);
+                        spriteText.push(byteText);
+
+                        // console.log(`sprite location:  ${this._registers.I + i}`);
                     }
-                    this.logMemoryDump();
                     console.log(sprite);
+                    console.log(spriteText);
+                    this.logMemoryDump();
                     this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1)
                 }
                 break;
@@ -371,7 +379,10 @@ export class Chip8Core {
                         instructionFunction = () => {
                             console.log(`${insturction}: Set BCD(V[${x}])`);
                             const vX: number = this._registers.getVRegister(x);
-                            const binaryString = vX.toString(10);
+                            let binaryString = vX.toString(10);
+                            while(binaryString.length < 3) {
+                                binaryString = '0' + binaryString;
+                            }
                             for(let i = 0; i < binaryString.length; i++) {
                                 const currentAddress = this._registers.I + i;
                                 this._memory.setValueAt(currentAddress, parseInt(binaryString[i]));
@@ -380,7 +391,7 @@ export class Chip8Core {
                         break;
                     case '55':
                         instructionFunction = () => {
-                            console.log(`${insturction}: reg_dump(V[${x}],&I)`);
+                            console.log(`${insturction}: reg_dump(V[${x}],I)`);
                             for(let i = 0; i <= x; i++) {
                                 this._memory.setValueAt(this._registers.I + i, this._registers.getVRegister(i));
                             }
@@ -389,11 +400,16 @@ export class Chip8Core {
                         break;
                     case '65':
                         instructionFunction = () => {
-                            console.log(`${insturction}: reg_load(V[${x}],&I)`);
+                            console.log(`${insturction}: reg_load(V[${x}],I)`);
                             for(let i = 0; i <= x; i++) {
-                                this._registers.setVRegister(i, this._memory.getValueAt(this._registers.I + i));
+                                const address = this._registers.I + i;
+                                const memoryValue = this._memory.getValueAt(address);
+                                this._registers.setVRegister(i, memoryValue);
+
+                                // console.log(`set v[${i}] = ${memoryValue.toString(16)} taken from address = ${address}`);
                             }
                             this._registers.I += x+ 1;
+                            // console.log(this._memory.stringifyMemory());
                         }
                         break;
                     default:

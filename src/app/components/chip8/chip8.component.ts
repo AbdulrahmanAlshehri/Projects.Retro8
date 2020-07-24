@@ -99,5 +99,4 @@ export class Chip8Component implements OnInit, AfterViewInit {
       }
     }
   }
-
 }
