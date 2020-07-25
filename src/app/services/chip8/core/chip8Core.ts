@@ -9,14 +9,13 @@ import * as IS from './instructionSet';
 
 export class Chip8Core {
 
-    public _memory: Memory;
-    public _registers: Registers;
-    public _stack: Stack;
-    public _frameBuffer: FrameBuffer;
-    public _audio: Audio;
-    public _input: Input;
-    public _programCounter: number;
-    private PROGRAM_COUNTER_INITIAL_VALUE = 512;
+    public _memory = new Memory();
+    public _registers = new Registers();
+    public _stack = new Stack();
+    public _frameBuffer = new FrameBuffer();
+    public _audio = new Audio();
+    public _input = new Input();
+    public _programCounter: number = 512;
 
     public isRomLoaded: boolean = false;
 
@@ -25,13 +24,6 @@ export class Chip8Core {
     public tempVNum: number;
 
     constructor() {
-        this._memory = new Memory();
-        this._registers = new Registers();
-        this._stack = new Stack();
-        this._frameBuffer = new FrameBuffer();
-        this._audio = new Audio();
-        this._input = new Input();
-        this._programCounter = this.PROGRAM_COUNTER_INITIAL_VALUE;
         window.addEventListener('keydown', (e) => this.onKeyDown(e));
         window.addEventListener('keyup', (e) => this.onKeyUp(e));
     }
@@ -50,7 +42,6 @@ export class Chip8Core {
             this.decrementTimers();
             const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
             const instructionFunction: Function = this.decodeInstruction(currentInsturction);
-            
             instructionFunction();
             this.incrementProgramCounter();
         }
@@ -68,6 +59,7 @@ export class Chip8Core {
             this._audio.stop();
         }
     }
+
     decodeInstruction(insturction: string): Function {
         const N = parseInt(insturction.substring(3), 16);
         const NN = parseInt(insturction.substring(2), 16);
@@ -160,7 +152,6 @@ export class Chip8Core {
                         };
                     case 'E':
                         return () => {
-                            // console.log(`${insturction}: BitOP V[${x}] = V[${y}] << 1`);
                             IS.setVxToVyShiftedLeft(this, x, y);
                         };
                     default:
@@ -258,6 +249,11 @@ export class Chip8Core {
         return this._frameBuffer.currentFrame;
     }
 
+    haltForInput(vNum: number) {
+        this.tempVNum = vNum;
+        this.isHalted = true;
+    }
+
     setInput(key: number) {
         this._input.setKey(key);
         if(this.isHalted) {
@@ -276,15 +272,11 @@ export class Chip8Core {
             this.isHalted = false;
         }
     }
+
     onKeyUp(e: KeyboardEvent) {
         const keyNumber = parseInt(e.key, 16);
         if(keyNumber < 16) {
             this._input.unsetKey(keyNumber);
         }
-    }
-
-    haltForInput(vNum: number) {
-        this.tempVNum = vNum;
-        this.isHalted = true;
     }
 }
