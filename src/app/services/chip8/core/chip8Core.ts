@@ -5,15 +5,17 @@ import { FrameBuffer } from './frameBuffer';
 import { Input } from './input';
 import { Audio } from './audio';
 
+import * as IS from './instructionSet';
+
 export class Chip8Core {
 
-    private _memory: Memory;
-    private _registers: Registers;
-    private _stack: Stack;
-    private _frameBuffer: FrameBuffer;
-    private _audio: Audio;
-    private _input: Input;
-    private _programCounter: number;
+    public _memory: Memory;
+    public _registers: Registers;
+    public _stack: Stack;
+    public frameBuffer: FrameBuffer;
+    public _audio: Audio;
+    public _input: Input;
+    public _programCounter: number;
     private PROGRAM_COUNTER_INITIAL_VALUE = 512;
 
     public isRomLoaded: boolean = false;
@@ -26,7 +28,7 @@ export class Chip8Core {
         this._memory = new Memory();
         this._registers = new Registers();
         this._stack = new Stack();
-        this._frameBuffer = new FrameBuffer();
+        this.frameBuffer = new FrameBuffer();
         this._audio = new Audio();
         this._input = new Input();
         this._programCounter = this.PROGRAM_COUNTER_INITIAL_VALUE;
@@ -48,6 +50,7 @@ export class Chip8Core {
             this.decrementTimers();
             const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
             const instructionFunction: Function = this.decodeInstruction(currentInsturction);
+            
             instructionFunction();
 
             if(this._registers.soundRegister > 0) {
@@ -77,113 +80,56 @@ export class Chip8Core {
         const n3 = insturction.substring(1);
         const x = parseInt(insturction[1], 16);
         const y = parseInt(insturction[2], 16);
-        // console.table({
-        //     i1: i1.toString(16),
-        //     i2: i2.toString(16),
-        //     i3: i3.toString(16),
-        //     x: x.toString(16),
-        //     y: y.toString(16),
-        //     PC: this._programCounter.toString(16),
-        //     instruction: insturction,
-        //     V0: this._registers.getVRegister(0).toString(16),
-        //     V1: this._registers.getVRegister(1).toString(16),
-        //     V2: this._registers.getVRegister(2).toString(16),
-        //     V3: this._registers.getVRegister(3).toString(16),
-        //     V4: this._registers.getVRegister(4).toString(16),
-        //     V5: this._registers.getVRegister(5).toString(16),
-        //     V6: this._registers.getVRegister(6).toString(16),
-        //     V7: this._registers.getVRegister(7).toString(16),
-        //     V8: this._registers.getVRegister(8).toString(16),
-        //     V9: this._registers.getVRegister(9).toString(16),
-        //     VA: this._registers.getVRegister(10).toString(16),
-        //     VB: this._registers.getVRegister(11).toString(16),
-        //     VC: this._registers.getVRegister(12).toString(16),
-        //     VD: this._registers.getVRegister(13).toString(16),
-        //     VE: this._registers.getVRegister(14).toString(16),
-        //     VF: this._registers.getVRegister(15).toString(16),
-        //     I: this._registers.I.toString(16),
-        //     DT: this._registers.delayRegister.toString(16),
-        //     ST: this._registers.soundRegister.toString(16)
-        // });
         switch (insturction[0]) {
             case '0':
-                switch(n3){
+                switch(n3) {
                     case '0E0':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: clear`);
-                            this._frameBuffer.clearFrameBuffer();
-                        }
-                        break;
+                        return () => {
+                            IS.clearDisplay(this);
+                        };
                     case '0EE':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: return;`);
-                            this._programCounter = this._stack.pop();
-                        }
-                        break;
+                        return () => {
+                            IS.returnProc(this);
+                        };
                     case '000':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Nop`);
-                        }
-                        break;
+                        return () => {
+                            IS.noOperation(this);
+                        };
                     default:
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Call RCA ${i3}`);
-                        }
-                        break;
-                }
-                break;
+                        return () => {
+                            IS.invalidInstruction(this);
+                        };
+                };
             case '1':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Jump $${i3}`);
-                    this._programCounter = i3 - 2;
-                }
-                break;
+                return () => {
+                    IS.jump(this, i3);
+                };
             case '2':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Call $${i3}`);
-                    this._stack.push(this._programCounter);
-                    this._programCounter = i3;
-                }
-                break;
+                return () => {
+                    IS.call(this, i3);
+                };
             case '3':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Skip if(V[${x}]==0x${n2})`);
-                    if(this._registers.getVRegister(x) === i2) {
-                        this.incrementProgramCounter()
-                    }
-                }
-                break;
+                return () => {
+                    IS.skipIfVxEqualsNN(this, x, i2);
+                };
             case '4':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Skip if(V[${x}]!=0x${n2})`);
-                    if(this._registers.getVRegister(x) !== i2) {
-                        this.incrementProgramCounter();
-                    }
-                }
-                break;
+                return () => {
+                    IS.skipIfVxNotEqualsNN(this, x, i2);
+                };
             case '5':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Skip if(V[${x}]==V[${y})]`);
-                    if(this._registers.getVRegister(x) === this._registers.getVRegister(y)) {
-                        this.incrementProgramCounter();
-                    }
-                }
-                break;
+                return () => {
+                    IS.skipIfVxEqualsVy(this, x, y);
+                };
             case '6':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Set v[${x}] = 0x${n2}`);
-                    this._registers.setVRegister(x, i2);
-                }
-                break;
+                return () => {
+                    IS.setVxTo(this, x, i2);
+                };
             case '7':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Set v[${x}] += 0x${n2}`);
-                    let value = this._registers.getVRegister(x) + i2;
-                    this._registers.setVRegister(x, value);
-                }
-                break;
+                return () => {
+                    IS.incrementVxBy(this, x, i2);
+                };
             case '8':
-                switch(insturction[3]){
+                switch(insturction[3]) {
                     case '0':
                         instructionFunction = () => {
                             // console.log(`${insturction}: Set V[${x}]=V[${y}`);
@@ -321,7 +267,7 @@ export class Chip8Core {
                         sprite.set([byte], i);
                     }
 
-                    let collision = this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1);
+                    let collision = this.frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1);
 
                     if(collision) {
                         this._registers.setVRegister(15, 1);
@@ -442,17 +388,11 @@ export class Chip8Core {
                 }
         }
 
-        // // console.log(instructionFunction);
-
         return instructionFunction;
     }
 
     getFrame() {
-        return this._frameBuffer.currentFrame;
-    }
-
-    logMemoryDump() {
-        // console.log(this._memory.stringifyMemory());
+        return this.frameBuffer.currentFrame;
     }
 
     setInput(key: number) {
@@ -461,7 +401,6 @@ export class Chip8Core {
             this.isHalted = false;
         }
     }
-
     
     onKeyDown(e:KeyboardEvent) {
         const keyNumber = parseInt(e.key, 16);
