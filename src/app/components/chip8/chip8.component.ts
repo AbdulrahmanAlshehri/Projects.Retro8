@@ -19,6 +19,8 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   private _currentRom: Uint8Array;
 
+  private isRunning: boolean = false;
+
   constructor(
     private chip8Service: Chip8Service
   ) { 
@@ -53,8 +55,9 @@ export class Chip8Component implements OnInit, AfterViewInit {
   };
 
   onStartClick(){
+    this.isRunning = true;
     this.chip8Service.insertRom(this._currentRom);
-    this._animationLoop = requestAnimationFrame(this.getNextFrame);
+    this._animationLoop = window.requestAnimationFrame(this.getNextFrame);
   }
 
   onNextFrameClick() {
@@ -68,7 +71,7 @@ export class Chip8Component implements OnInit, AfterViewInit {
   }
 
   onStopClick(){
-    cancelAnimationFrame(this._animationLoop);
+    this.isRunning = false;
   }
 
   onResetClick() {
@@ -78,7 +81,9 @@ export class Chip8Component implements OnInit, AfterViewInit {
   getNextFrame() {
     this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
     this.drawFrame(this._currentFrame);
-    requestAnimationFrame(this.getNextFrame);
+    if(this.isRunning) {
+      requestAnimationFrame(this.getNextFrame);
+    }
   }
   drawFrame(frame: number[][]) {
     this.context.clearRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);
