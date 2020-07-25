@@ -20,6 +20,7 @@ export class Chip8Core {
 
     public isHalted: boolean = false;
 
+    public tempVNum: number;
 
     constructor() {
         this._memory = new Memory();
@@ -29,6 +30,8 @@ export class Chip8Core {
         this._audio = new Audio();
         this._input = new Input();
         this._programCounter = this.PROGRAM_COUNTER_INITIAL_VALUE;
+        window.addEventListener('keydown', (e) => this.onKeyDown(e));
+        window.addEventListener('keyup', (e) => this.onKeyUp(e));
     }
 
     insertRom(rom: Uint8Array) {
@@ -46,6 +49,7 @@ export class Chip8Core {
             const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
             const instructionFunction: Function = this.decodeInstruction(currentInsturction);
             instructionFunction();
+
             if(this._registers.soundRegister > 0) {
                 this._audio.play();
             } else {
@@ -324,7 +328,13 @@ export class Chip8Core {
                     console.log(sprite);
                     console.log(spriteText);
                     this.logMemoryDump();
-                    this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1)
+                    let collision = this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1)
+                    if(collision) {
+                        this._registers.setVRegister(15, 1);
+                    }
+                    else {
+                        this._registers.setVRegister(15, 0);
+                    }
                 }
                 break;
             case 'E':
@@ -361,10 +371,9 @@ export class Chip8Core {
                         break;
                     case '0A':
                         instructionFunction = () => {
-                            //TODO: halt and wait for input
                             console.log(`${insturction}: Set V[${x}] = key`);
+                            this.haltForInput(x);
                             console.log('waiting for input');
-                            this.isHalted = true;
                         }
                         break;
                     case '15':
@@ -459,5 +468,29 @@ export class Chip8Core {
         if(this.isHalted) {
             this.isHalted = false;
         }
+    }
+
+    
+    onKeyDown(e:KeyboardEvent) {
+        const keyNumber = parseInt(e.key, 16);
+        if(keyNumber < 16) {
+            this.setInput(keyNumber);
+        }
+
+        if(this.isHalted) {
+            this._registers.setVRegister(this.tempVNum, keyNumber);
+            this.isHalted = false;
+        }
+    }
+    onKeyUp(e: KeyboardEvent) {
+        const keyNumber = parseInt(e.key, 16);
+        if(keyNumber < 16) {
+            this._input.unsetKey(keyNumber);
+        }
+    }
+
+    haltForInput(vNum: number) {
+        this.tempVNum = vNum;
+        this.isHalted = true;
     }
 }

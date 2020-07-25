@@ -37,7 +37,8 @@ export class FrameBuffer {
         }
     }
 
-    draw(x: number, y: number, sprite: Uint8Array, byteCount: number) {
+    draw(x: number, y: number, sprite: Uint8Array, byteCount: number): boolean {
+        let collision: boolean = false;
         for(let i = 0; i < byteCount; i++) {
             let spriteString = sprite[i].toString(2);
             while(spriteString.length < 8) {
@@ -45,6 +46,9 @@ export class FrameBuffer {
             }
             for(let j = 0; j < 8; j++) {
                 if(spriteString[j] === '1') {
+                    if(this.currentFrame[(x + j) % 64][(y + i) % 32] & 1) {
+                        collision = true;
+                    }
                     this.currentFrame[(x + j) % 64][(y + i) % 32] = 1 ^ this.currentFrame[(x + j) % 64][(y + i) % 32];
                 }
                 else {
@@ -53,5 +57,6 @@ export class FrameBuffer {
             }
         }
         console.log(this._currentFrame);
+        return collision;
     }
 }
