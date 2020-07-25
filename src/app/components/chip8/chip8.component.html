@@ -1,6 +1,4 @@
-<p>chip8 works!</p>
 
-<h1>hello chip8</h1>
 <div>
     <label for="inputRom">Select a chip8 Rom:</label>
     <input type="file" id="inputRom" name="inputRom" (change)="handleRomLoad($event.target.files)"/>
@@ -12,5 +10,5 @@
         <input type="button" value="stop" (click)="onStopClick()">
         <input type="button" value="reset" (click)="onResetClick()">
     </div>
-    <canvas #display width="1024" height="512"></canvas>
+    <canvas #display width="512" height="256"></canvas>
 </div>

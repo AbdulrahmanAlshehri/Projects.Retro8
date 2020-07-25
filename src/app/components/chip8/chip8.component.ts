@@ -21,16 +21,16 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   constructor(
     private chip8Service: Chip8Service
-  ) { }
+  ) { 
+    this.getNextFrame = this.getNextFrame.bind(this);
+  }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
     this.context = this.display.nativeElement.getContext('2d');
-    // this.context.fillStyle = 'black';
-    // this.context.fillRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);
-    this.context.scale(16, 16);
+    this.context.scale(8, 8);
 
   }
 
@@ -54,10 +54,7 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   onStartClick(){
     this.chip8Service.insertRom(this._currentRom);
-    this._animationLoop = setInterval(() => {
-      this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
-      this.drawFrame(this._currentFrame);
-    }, 16);
+    this._animationLoop = requestAnimationFrame(this.getNextFrame);
   }
 
   onNextFrameClick() {
@@ -71,13 +68,18 @@ export class Chip8Component implements OnInit, AfterViewInit {
   }
 
   onStopClick(){
-    clearInterval(this._animationLoop);
+    cancelAnimationFrame(this._animationLoop);
   }
 
   onResetClick() {
     this.chip8Service.resetCore();
   }
 
+  getNextFrame() {
+    this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
+    this.drawFrame(this._currentFrame);
+    requestAnimationFrame(this.getNextFrame);
+  }
   drawFrame(frame: number[][]) {
     this.context.clearRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);
     const frameWidth = frame.length;
