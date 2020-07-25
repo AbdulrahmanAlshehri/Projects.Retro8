@@ -3,7 +3,7 @@ import { Chip8Core } from './chip8Core';
 // clear screen display
 export function clearDisplay(core: Chip8Core): void {
     // console.log(`${insturction}: clear`);
-    core.frameBuffer.clearFrameBuffer();
+    core._frameBuffer.clearFrameBuffer();
 }
 
 // return from function call
@@ -160,7 +160,7 @@ export function drawNofSpriteAtXY(core: Chip8Core, x: number, y: number, N: numb
         sprite.set([byte], i);
     }
 
-    let collision = core.frameBuffer.draw(core._registers.getVRegister(x), core._registers.getVRegister(y), sprite, N);
+    let collision = core._frameBuffer.draw(core._registers.getVRegister(x), core._registers.getVRegister(y), sprite, N);
 
     if(collision) {
         core._registers.setVRegister(15, 1);
@@ -221,4 +221,8 @@ export function loadRegistersUpToVxFromMemeory(core: Chip8Core, x: number): void
 
     }
     core._registers.I += x+ 1;
+}
+
+export function waitForInput(core: Chip8Core, x: number): void {
+    core.haltForInput(x);
 }

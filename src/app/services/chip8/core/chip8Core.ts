@@ -12,7 +12,7 @@ export class Chip8Core {
     public _memory: Memory;
     public _registers: Registers;
     public _stack: Stack;
-    public frameBuffer: FrameBuffer;
+    public _frameBuffer: FrameBuffer;
     public _audio: Audio;
     public _input: Input;
     public _programCounter: number;
@@ -28,7 +28,7 @@ export class Chip8Core {
         this._memory = new Memory();
         this._registers = new Registers();
         this._stack = new Stack();
-        this.frameBuffer = new FrameBuffer();
+        this._frameBuffer = new FrameBuffer();
         this._audio = new Audio();
         this._input = new Input();
         this._programCounter = this.PROGRAM_COUNTER_INITIAL_VALUE;
@@ -52,12 +52,6 @@ export class Chip8Core {
             const instructionFunction: Function = this.decodeInstruction(currentInsturction);
             
             instructionFunction();
-
-            if(this._registers.soundRegister > 0) {
-                this._audio.play();
-            } else {
-                this._audio.stop();
-            }
             this.incrementProgramCounter();
         }
     }
@@ -66,8 +60,12 @@ export class Chip8Core {
         if(this._registers.delayRegister > 0) {
             this._registers.delayRegister -= 1;
         }
+
         if(this._registers.soundRegister > 0) {
             this._registers.soundRegister -= 1;
+            this._audio.play();
+        } else {
+            this._audio.stop();
         }
     }
     decodeInstruction(insturction: string): Function {
@@ -214,10 +212,7 @@ export class Chip8Core {
                         };
                     case '0A':
                         return () => {
-                            //TODO: extract to IS
-                            // console.log(`${insturction}: Set V[${x}] = key`);
-                            this.haltForInput(x);
-                            // console.log('waiting for input');
+                            IS.waitForInput(this, x);
                         };
                     case '15':
                         return () => {
@@ -260,7 +255,7 @@ export class Chip8Core {
     }
 
     getFrame() {
-        return this.frameBuffer.currentFrame;
+        return this._frameBuffer.currentFrame;
     }
 
     setInput(key: number) {
