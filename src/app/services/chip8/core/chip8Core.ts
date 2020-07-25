@@ -71,11 +71,9 @@ export class Chip8Core {
         }
     }
     decodeInstruction(insturction: string): Function {
-        let instructionFunction: Function;
-        const i1 = parseInt(insturction.substring(3), 16);
-        const i2 = parseInt(insturction.substring(2), 16);
-        const i3 = parseInt(insturction.substring(1), 16);
-        const n1 = insturction.substring(3);
+        const N = parseInt(insturction.substring(3), 16);
+        const NN = parseInt(insturction.substring(2), 16);
+        const NNN = parseInt(insturction.substring(1), 16);
         const n2 = insturction.substring(2);
         const n3 = insturction.substring(1);
         const x = parseInt(insturction[1], 16);
@@ -102,19 +100,19 @@ export class Chip8Core {
                 };
             case '1':
                 return () => {
-                    IS.jump(this, i3);
+                    IS.jump(this, NNN);
                 };
             case '2':
                 return () => {
-                    IS.call(this, i3);
+                    IS.call(this, NNN);
                 };
             case '3':
                 return () => {
-                    IS.skipIfVxEqualsNN(this, x, i2);
+                    IS.skipIfVxEqualsNN(this, x, NN);
                 };
             case '4':
                 return () => {
-                    IS.skipIfVxNotEqualsNN(this, x, i2);
+                    IS.skipIfVxNotEqualsNN(this, x, NN);
                 };
             case '5':
                 return () => {
@@ -122,11 +120,11 @@ export class Chip8Core {
                 };
             case '6':
                 return () => {
-                    IS.setVxTo(this, x, i2);
+                    IS.setVxTo(this, x, NN);
                 };
             case '7':
                 return () => {
-                    IS.incrementVxBy(this, x, i2);
+                    IS.incrementVxBy(this, x, NN);
                 };
             case '8':
                 switch(insturction[3]) {
@@ -178,12 +176,12 @@ export class Chip8Core {
                 };
             case 'A':
                 return () => {
-                    IS.setI(this, i3);
+                    IS.setI(this, NNN);
                 };
             case 'B':
                 return () => {
                     // console.log(`${insturction}: PC = V0 + 0x${n3}`);
-                    IS.setProgramCounterToV0PlusNNN(this, i3);
+                    IS.setProgramCounterToV0PlusNNN(this, NNN);
                 };
             case 'C':
                 return () => {
@@ -191,7 +189,7 @@ export class Chip8Core {
                 };
             case 'D':
                 return () => {
-                    IS.drawNofSpriteAtXY(this, x, y, i1);
+                    IS.drawNofSpriteAtXY(this, x, y, N);
                 };
             case 'E':
                 switch(n2) {
@@ -211,91 +209,54 @@ export class Chip8Core {
             case 'F':
                 switch(n2) {
                     case '07':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set V[${x}] = delay_timer`);
-                            this._registers.setVRegister(x, this._registers.delayRegister);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToDelayTimer(this, x);
+                        };
                     case '0A':
-                        instructionFunction = () => {
+                        return () => {
+                            //TODO: extract to IS
                             // console.log(`${insturction}: Set V[${x}] = key`);
                             this.haltForInput(x);
                             // console.log('waiting for input');
-                        }
-                        break;
+                        };
                     case '15':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set delay_timer = V[${x}]`);
-                            this._registers.delayRegister = this._registers.getVRegister(x);
-                        }
-                        break;
+                        return () => {
+                            IS.setDelayTimerEqualToVx(this, x);
+                        };
                     case '18':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set sound_timer = V[${x}]`);
-                            this._registers.soundRegister = this._registers.getVRegister(x);
-
-                        }
-                        break;
+                        return () => {
+                            IS.setSoundTimerEqualToVx(this, x);
+                        };
                     case '1E':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set I += V[${x}]`);
-                            this._registers.I += this._registers.getVRegister(x);
-                        }
-                        break;
+                        return () => {
+                            IS.setIEqualToIPlusVx(this, x);
+                        };
                     case '29':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set I = sprite_addr[V[${x}]]`);
-                            this._registers.I = this._registers.getVRegister(x) * 5;
-                        }
-                        break;
+                        return () => {
+                            IS.setIEqualToVxSpriteAddress(this, x);
+                        };
                     case '33':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set BCD(V[${x}])`);
-                            const vX: number = this._registers.getVRegister(x);
-                            let binaryString = vX.toString(10);
-                            while(binaryString.length < 3) {
-                                binaryString = '0' + binaryString;
-                            }
-                            for(let i = 0; i < binaryString.length; i++) {
-                                const currentAddress = this._registers.I + i;
-                                this._memory.setValueAt(currentAddress, parseInt(binaryString[i]));
-                            }
-                        }
-                        break;
+                        return () => {
+                            IS.storeVxAsBinaryCodedDecimalInMemory(this, x);
+                        };
                     case '55':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: reg_dump(V[${x}],I)`);
-                            for(let i = 0; i <= x; i++) {
-                                this._memory.setValueAt(this._registers.I + i, this._registers.getVRegister(i));
-                            }
-                            this._registers.I += x+ 1;
-                        }
-                        break;
+                        return () => {
+                            IS.storeRegistersUpToVxInMemory(this, x);
+                        };
                     case '65':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: reg_load(V[${x}],I)`);
-                            for(let i = 0; i <= x; i++) {
-                                const address = this._registers.I + i;
-                                const memoryValue = this._memory.getValueAt(address);
-                                this._registers.setVRegister(i, memoryValue);
-
-                            }
-                            this._registers.I += x+ 1;
-                        }
-                        break;
+                        return () => {
+                            IS.loadRegistersUpToVxFromMemeory(this, x);
+                        };
                     default:
-                        instructionFunction = () => {
-                            // console.log(`${insturction} is not defined`);
-                        }
-                }
-                break;
+                        return () => {
+                            IS.invalidInstruction(this);
+                        };
+                };
             default:
-                instructionFunction = () => {
-                    // console.log(`${insturction} is not defined`);
-                }
+                return () => {
+                    IS.invalidInstruction(this);
+                };
         }
-
-        return instructionFunction;
     }
 
     getFrame() {

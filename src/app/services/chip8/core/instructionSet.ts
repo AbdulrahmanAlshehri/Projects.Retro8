@@ -130,6 +130,14 @@ export function setI(core: Chip8Core, NNN: number): void {
     core._registers.I = NNN;
 }
 
+export function setIEqualToIPlusVx(core: Chip8Core, x: number): void {
+    core._registers.I += core._registers.getVRegister(x);
+}
+
+export function setIEqualToVxSpriteAddress(core: Chip8Core, x: number): void {
+    core._registers.I = core._registers.getVRegister(x) * 5;
+}
+
 export function setProgramCounterToV0PlusNNN(core: Chip8Core, NNN: number): void {
     core._programCounter = (core._registers.getVRegister(0) + NNN) & 0x0FF;
 }
@@ -172,4 +180,45 @@ export function skipIfKeyInVxIsNotSet(core: Chip8Core, x: number): void {
     if(core._input.getKey(core._registers.getVRegister(x)) !== 1) {
         core.incrementProgramCounter();
     }
+}
+
+export function setVxEqualToDelayTimer(core: Chip8Core, x: number): void {
+    core._registers.setVRegister(x, core._registers.delayRegister);
+}
+
+export function setDelayTimerEqualToVx(core: Chip8Core, x: number): void {
+    core._registers.delayRegister = core._registers.getVRegister(x);
+}
+
+export function setSoundTimerEqualToVx(core: Chip8Core, x: number): void {
+    core._registers.soundRegister = core._registers.getVRegister(x);
+}
+
+export function storeVxAsBinaryCodedDecimalInMemory(core: Chip8Core, x: number): void {
+    const vX: number = core._registers.getVRegister(x);
+    let binaryString = vX.toString(10);
+    while(binaryString.length < 3) {
+        binaryString = '0' + binaryString;
+    }
+    for(let i = 0; i < binaryString.length; i++) {
+        const currentAddress = core._registers.I + i;
+        core._memory.setValueAt(currentAddress, parseInt(binaryString[i]));
+    }
+}
+
+export function storeRegistersUpToVxInMemory(core: Chip8Core, x: number): void {
+    for(let i = 0; i <= x; i++) {
+        core._memory.setValueAt(core._registers.I + i, core._registers.getVRegister(i));
+    }
+    core._registers.I += x+ 1;
+}
+
+export function loadRegistersUpToVxFromMemeory(core: Chip8Core, x: number): void {
+    for(let i = 0; i <= x; i++) {
+        const address = core._registers.I + i;
+        const memoryValue = core._memory.getValueAt(address);
+        core._registers.setVRegister(i, memoryValue);
+
+    }
+    core._registers.I += x+ 1;
 }
