@@ -56,7 +56,6 @@ export class FrameBuffer {
                 }
             }
         }
-        console.log(this._currentFrame);
         return collision;
     }
 }
