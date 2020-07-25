@@ -185,7 +185,7 @@ export class Chip8Core {
                 };
             case 'C':
                 return () => {
-                    IS.setVxToRandom(this, x);
+                    IS.setVxToRandom(this, x, NN);
                 };
             case 'D':
                 return () => {

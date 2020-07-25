@@ -142,8 +142,8 @@ export function setProgramCounterToV0PlusNNN(core: Chip8Core, NNN: number): void
     core._programCounter = (core._registers.getVRegister(0) + NNN) & 0x0FF;
 }
 
-export function setVxToRandom(core: Chip8Core, x: number) {
-    core._registers.setVRegister(x, Math.floor(Math.random() * 255) & i2);
+export function setVxToRandom(core: Chip8Core, x: number, NN: number) {
+    core._registers.setVRegister(x, Math.floor(Math.random() * 255) & NN);
 
 }
 
