@@ -15,12 +15,21 @@ export class Audio {
         this.oscillator.frequency.value = 400;
         this.oscillator.connect(this.audioContext.destination);
     }
+
     public play(): void {
         if (!this.oscillator) {
             this.createOscillator();
             if (this.oscillator) {
                 this.oscillator.start(0);
             }
+        }
+    }
+
+    public stop(): void {
+        if (this.oscillator) {
+            this.oscillator.stop(0);
+            this.oscillator.disconnect(this.audioContext.destination);
+            this.oscillator = null;
         }
     }
 }
