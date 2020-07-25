@@ -77,78 +77,77 @@ export class Chip8Core {
         const n3 = insturction.substring(1);
         const x = parseInt(insturction[1], 16);
         const y = parseInt(insturction[2], 16);
-        console.table({
-            i1: i1.toString(16),
-            i2: i2.toString(16),
-            i3: i3.toString(16),
-            x: x.toString(16),
-            y: y.toString(16),
-            PC: this._programCounter.toString(16),
-            instruction: insturction,
-            V0: this._registers.getVRegister(0).toString(16),
-            V1: this._registers.getVRegister(1).toString(16),
-            V2: this._registers.getVRegister(2).toString(16),
-            V3: this._registers.getVRegister(3).toString(16),
-            V4: this._registers.getVRegister(4).toString(16),
-            V5: this._registers.getVRegister(5).toString(16),
-            V6: this._registers.getVRegister(6).toString(16),
-            V7: this._registers.getVRegister(7).toString(16),
-            V8: this._registers.getVRegister(8).toString(16),
-            V9: this._registers.getVRegister(9).toString(16),
-            VA: this._registers.getVRegister(10).toString(16),
-            VB: this._registers.getVRegister(11).toString(16),
-            VC: this._registers.getVRegister(12).toString(16),
-            VD: this._registers.getVRegister(13).toString(16),
-            VE: this._registers.getVRegister(14).toString(16),
-            VF: this._registers.getVRegister(15).toString(16),
-            I: this._registers.I.toString(16),
-            DT: this._registers.delayRegister.toString(16),
-            ST: this._registers.soundRegister.toString(16)
-        });
-        console.log(this._memory.stringifyMemory());
+        // console.table({
+        //     i1: i1.toString(16),
+        //     i2: i2.toString(16),
+        //     i3: i3.toString(16),
+        //     x: x.toString(16),
+        //     y: y.toString(16),
+        //     PC: this._programCounter.toString(16),
+        //     instruction: insturction,
+        //     V0: this._registers.getVRegister(0).toString(16),
+        //     V1: this._registers.getVRegister(1).toString(16),
+        //     V2: this._registers.getVRegister(2).toString(16),
+        //     V3: this._registers.getVRegister(3).toString(16),
+        //     V4: this._registers.getVRegister(4).toString(16),
+        //     V5: this._registers.getVRegister(5).toString(16),
+        //     V6: this._registers.getVRegister(6).toString(16),
+        //     V7: this._registers.getVRegister(7).toString(16),
+        //     V8: this._registers.getVRegister(8).toString(16),
+        //     V9: this._registers.getVRegister(9).toString(16),
+        //     VA: this._registers.getVRegister(10).toString(16),
+        //     VB: this._registers.getVRegister(11).toString(16),
+        //     VC: this._registers.getVRegister(12).toString(16),
+        //     VD: this._registers.getVRegister(13).toString(16),
+        //     VE: this._registers.getVRegister(14).toString(16),
+        //     VF: this._registers.getVRegister(15).toString(16),
+        //     I: this._registers.I.toString(16),
+        //     DT: this._registers.delayRegister.toString(16),
+        //     ST: this._registers.soundRegister.toString(16)
+        // });
         switch (insturction[0]) {
             case '0':
                 switch(n3){
                     case '0E0':
                         instructionFunction = () => {
-                            console.log(`${insturction}: clear`);
+                            // console.log(`${insturction}: clear`);
                             this._frameBuffer.clearFrameBuffer();
                         }
                         break;
                     case '0EE':
                         instructionFunction = () => {
-                            console.log(`${insturction}: return;`);
+                            // console.log(`${insturction}: return;`);
                             this._programCounter = this._stack.pop();
                         }
                         break;
                     case '000':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Nop`);
+                            // console.log(`${insturction}: Nop`);
                         }
                         break;
                     default:
                         instructionFunction = () => {
-                            console.log(`${insturction}: Call RCA ${i3}`);
+                            // console.log(`${insturction}: Call RCA ${i3}`);
                         }
                         break;
                 }
                 break;
             case '1':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Jump $${i3}`);
+                    // console.log(`${insturction}: Jump $${i3}`);
                     this._programCounter = i3 - 2;
                 }
                 break;
             case '2':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Call $${i3}`);
+                    // console.log(`${insturction}: Call $${i3}`);
                     this._stack.push(this._programCounter);
                     this._programCounter = i3;
                 }
                 break;
             case '3':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Skip if(V[${x}]==0x${n2})`);
+                    // console.log(`${insturction}: Skip if(V[${x}]==0x${n2})`);
                     if(this._registers.getVRegister(x) === i2) {
                         this.incrementProgramCounter()
                     }
@@ -156,7 +155,7 @@ export class Chip8Core {
                 break;
             case '4':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Skip if(V[${x}]!=0x${n2})`);
+                    // console.log(`${insturction}: Skip if(V[${x}]!=0x${n2})`);
                     if(this._registers.getVRegister(x) !== i2) {
                         this.incrementProgramCounter();
                     }
@@ -164,7 +163,7 @@ export class Chip8Core {
                 break;
             case '5':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Skip if(V[${x}]==V[${y})]`);
+                    // console.log(`${insturction}: Skip if(V[${x}]==V[${y})]`);
                     if(this._registers.getVRegister(x) === this._registers.getVRegister(y)) {
                         this.incrementProgramCounter();
                     }
@@ -172,13 +171,13 @@ export class Chip8Core {
                 break;
             case '6':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Set v[${x}] = 0x${n2}`);
+                    // console.log(`${insturction}: Set v[${x}] = 0x${n2}`);
                     this._registers.setVRegister(x, i2);
                 }
                 break;
             case '7':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Set v[${x}] += 0x${n2}`);
+                    // console.log(`${insturction}: Set v[${x}] += 0x${n2}`);
                     let value = this._registers.getVRegister(x) + i2;
                     this._registers.setVRegister(x, value);
                 }
@@ -187,34 +186,34 @@ export class Chip8Core {
                 switch(insturction[3]){
                     case '0':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set V[${x}]=V[${y}`);
+                            // console.log(`${insturction}: Set V[${x}]=V[${y}`);
                             this._registers.setVRegister(x, this._registers.getVRegister(y));
                         }
                         break;
                     case '1':
                         instructionFunction = () => {
-                            console.log(`${insturction}: BitOp V[${x}] = V[${x}] OR V[${y}`);
+                            // console.log(`${insturction}: BitOp V[${x}] = V[${x}] OR V[${y}`);
                             const res = this._registers.getVRegister(x) | this._registers.getVRegister(y);
                             this._registers.setVRegister(x, res);
                         }
                         break;
                     case '2':
                         instructionFunction = () => {
-                            console.log(`${insturction}: BitOp V[${x}] = V[${x}] AND V[${y}`);
+                            // console.log(`${insturction}: BitOp V[${x}] = V[${x}] AND V[${y}`);
                             const res = this._registers.getVRegister(x) & this._registers.getVRegister(y);
                             this._registers.setVRegister(x, res);
                         }
                         break;
                     case '3':
                         instructionFunction = () => {
-                            console.log(`${insturction}: BitOp V[${x}] = V[${x}] XOR V[${y}`);
+                            // console.log(`${insturction}: BitOp V[${x}] = V[${x}] XOR V[${y}`);
                             const res = this._registers.getVRegister(x) ^ this._registers.getVRegister(y);
                             this._registers.setVRegister(x, res);
                         }
                         break;
                     case '4':
                         instructionFunction = () => {
-                            console.log(`${insturction}: ADD V[${x}] = V[${x}] + V[${y}]`);
+                            // console.log(`${insturction}: ADD V[${x}] = V[${x}] + V[${y}]`);
                             let value = this._registers.getVRegister(x) + this._registers.getVRegister(y);
                             if(value > 255) {
                                 this._registers.setVRegister(15, 1);
@@ -224,7 +223,7 @@ export class Chip8Core {
                         break;
                     case '5':
                         instructionFunction = () => {
-                            console.log(`${insturction}: SUB V[${x}] = V[${x}] - V[${y}]`);
+                            // console.log(`${insturction}: SUB V[${x}] = V[${x}] - V[${y}]`);
                             const vX = this._registers.getVRegister(x);
                             const vY = this._registers.getVRegister(y);
                             const value = vX - vY;
@@ -240,7 +239,7 @@ export class Chip8Core {
                         break;
                     case '6':
                         instructionFunction = () => {
-                            console.log(`${insturction}: BitOP V[${x}] = V[${y}] >> 1`);
+                            // console.log(`${insturction}: BitOP V[${x}] = V[${y}] >> 1`);
                             const vY = this._registers.getVRegister(y);
                             const leastSignificantBit = vY % 2
                             this._registers.setVRegister(15, leastSignificantBit);
@@ -250,7 +249,7 @@ export class Chip8Core {
                         break;
                     case '7':
                         instructionFunction = () => {
-                            console.log(`${insturction}: SUB V[${x}] = V[${y}] - V[${x}]`);
+                            // console.log(`${insturction}: SUB V[${x}] = V[${y}] - V[${x}]`);
                             const vX = this._registers.getVRegister(x);
                             const vY = this._registers.getVRegister(y);
                             const value = vY - vX;
@@ -266,7 +265,7 @@ export class Chip8Core {
                         break;
                     case 'E':
                         instructionFunction = () => {
-                            console.log(`${insturction}: BitOP V[${x}] = V[${y}] << 1`);
+                            // console.log(`${insturction}: BitOP V[${x}] = V[${y}] << 1`);
                             const vY = this._registers.getVRegister(y);
                             const mostSignificantBit = vY > 127? 1 : 0;
                             this._registers.setVRegister(15, mostSignificantBit);
@@ -276,13 +275,13 @@ export class Chip8Core {
                         break;
                     default:
                         instructionFunction = () => {
-                            console.log(`${insturction} is not defined`);
+                            // console.log(`${insturction} is not defined`);
                         }
                 }
                 break;
             case '9':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Skip if(V[${x}] != v[${y}])`);
+                    // console.log(`${insturction}: Skip if(V[${x}] != v[${y}])`);
                     if(this._registers.getVRegister(x) !== this._registers.getVRegister(y)) {
                         this.incrementProgramCounter();
                     }
@@ -290,44 +289,40 @@ export class Chip8Core {
                 break;
             case 'A':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Set I = 0x${n3}`);
+                    // console.log(`${insturction}: Set I = 0x${n3}`);
                     this._registers.I = i3;
                 }
                 break;
             case 'B':
                 instructionFunction = () => {
-                    console.log(`${insturction}: PC = V0 + 0x${n3}`);
+                    // console.log(`${insturction}: PC = V0 + 0x${n3}`);
                     this._programCounter = (this._registers.getVRegister(0) + i3) & 0x0FF;
                 }
                 break;
             case 'C':
                 instructionFunction = () => {
-                    console.log(`${insturction}: Rand V[${x}] = rand & 0x${n2}`);
+                    // console.log(`${insturction}: Rand V[${x}] = rand & 0x${n2}`);
                     this._registers.setVRegister(x, Math.floor(Math.random() * 255) & i2);
                 }
                 break;
             case 'D':
                 instructionFunction = () => {
-                    //TODO: fix drawing
-                    console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${n1})`);
+                    //TODO: fix glitchy drawing
+                    // console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${n1})`);
+                    
                     let sprite = new Uint8Array(8);
-                    let spriteText = [];
+
                     for(let i = 0; i < i1; i++) {
                         let byte = this._memory.getValueAt(this._registers.I + i);
                         let byteText = byte.toString(2);
                         while(byteText.length < 8) {
                             byteText = '0' + byteText;
                         }
-
                         sprite.set([byte], i);
-                        spriteText.push(byteText);
-
-                        // console.log(`sprite location:  ${this._registers.I + i}`);
                     }
-                    console.log(sprite);
-                    console.log(spriteText);
-                    this.logMemoryDump();
-                    let collision = this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1)
+
+                    let collision = this._frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1);
+
                     if(collision) {
                         this._registers.setVRegister(15, 1);
                     }
@@ -340,7 +335,7 @@ export class Chip8Core {
                 switch(n2) {
                     case '9E':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Skip if(key() == v[${x}])`);
+                            // console.log(`${insturction}: Skip if(key() == v[${x}])`);
                             if(this._input.getKey(this._registers.getVRegister(x)) === 1) {
                                 this.incrementProgramCounter();
                             }
@@ -348,7 +343,7 @@ export class Chip8Core {
                         break;
                     case 'A1':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Skip if(key() != v[${x}])`);
+                            // console.log(`${insturction}: Skip if(key() != v[${x}])`);
                             if(this._input.getKey(this._registers.getVRegister(x)) !== 1) {
                                 this.incrementProgramCounter();
                             }
@@ -356,7 +351,7 @@ export class Chip8Core {
                         break;
                     default:
                         instructionFunction = () => {
-                            console.log(`${insturction} is not defined`);
+                            // console.log(`${insturction} is not defined`);
                         }
                 }
                 break;
@@ -364,45 +359,45 @@ export class Chip8Core {
                 switch(n2) {
                     case '07':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set V[${x}] = delay_timer`);
+                            // console.log(`${insturction}: Set V[${x}] = delay_timer`);
                             this._registers.setVRegister(x, this._registers.delayRegister);
                         }
                         break;
                     case '0A':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set V[${x}] = key`);
+                            // console.log(`${insturction}: Set V[${x}] = key`);
                             this.haltForInput(x);
-                            console.log('waiting for input');
+                            // console.log('waiting for input');
                         }
                         break;
                     case '15':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set delay_timer = V[${x}]`);
+                            // console.log(`${insturction}: Set delay_timer = V[${x}]`);
                             this._registers.delayRegister = this._registers.getVRegister(x);
                         }
                         break;
                     case '18':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set sound_timer = V[${x}]`);
+                            // console.log(`${insturction}: Set sound_timer = V[${x}]`);
                             this._registers.soundRegister = this._registers.getVRegister(x);
 
                         }
                         break;
                     case '1E':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set I += V[${x}]`);
+                            // console.log(`${insturction}: Set I += V[${x}]`);
                             this._registers.I += this._registers.getVRegister(x);
                         }
                         break;
                     case '29':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set I = sprite_addr[V[${x}]]`);
+                            // console.log(`${insturction}: Set I = sprite_addr[V[${x}]]`);
                             this._registers.I = this._registers.getVRegister(x) * 5;
                         }
                         break;
                     case '33':
                         instructionFunction = () => {
-                            console.log(`${insturction}: Set BCD(V[${x}])`);
+                            // console.log(`${insturction}: Set BCD(V[${x}])`);
                             const vX: number = this._registers.getVRegister(x);
                             let binaryString = vX.toString(10);
                             while(binaryString.length < 3) {
@@ -416,7 +411,7 @@ export class Chip8Core {
                         break;
                     case '55':
                         instructionFunction = () => {
-                            console.log(`${insturction}: reg_dump(V[${x}],I)`);
+                            // console.log(`${insturction}: reg_dump(V[${x}],I)`);
                             for(let i = 0; i <= x; i++) {
                                 this._memory.setValueAt(this._registers.I + i, this._registers.getVRegister(i));
                             }
@@ -425,31 +420,29 @@ export class Chip8Core {
                         break;
                     case '65':
                         instructionFunction = () => {
-                            console.log(`${insturction}: reg_load(V[${x}],I)`);
+                            // console.log(`${insturction}: reg_load(V[${x}],I)`);
                             for(let i = 0; i <= x; i++) {
                                 const address = this._registers.I + i;
                                 const memoryValue = this._memory.getValueAt(address);
                                 this._registers.setVRegister(i, memoryValue);
 
-                                // console.log(`set v[${i}] = ${memoryValue.toString(16)} taken from address = ${address}`);
                             }
                             this._registers.I += x+ 1;
-                            // console.log(this._memory.stringifyMemory());
                         }
                         break;
                     default:
                         instructionFunction = () => {
-                            console.log(`${insturction} is not defined`);
+                            // console.log(`${insturction} is not defined`);
                         }
                 }
                 break;
             default:
                 instructionFunction = () => {
-                    console.log(`${insturction} is not defined`);
+                    // console.log(`${insturction} is not defined`);
                 }
         }
 
-        console.log(instructionFunction);
+        // // console.log(instructionFunction);
 
         return instructionFunction;
     }
@@ -459,7 +452,7 @@ export class Chip8Core {
     }
 
     logMemoryDump() {
-        console.log(this._memory.stringifyMemory());
+        // console.log(this._memory.stringifyMemory());
     }
 
     setInput(key: number) {
