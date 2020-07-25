@@ -131,176 +131,83 @@ export class Chip8Core {
             case '8':
                 switch(insturction[3]) {
                     case '0':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Set V[${x}]=V[${y}`);
-                            this._registers.setVRegister(x, this._registers.getVRegister(y));
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVy(this, x, y);
+                        };
                     case '1':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: BitOp V[${x}] = V[${x}] OR V[${y}`);
-                            const res = this._registers.getVRegister(x) | this._registers.getVRegister(y);
-                            this._registers.setVRegister(x, res);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVxOrVy(this, x, y);
+                        };
                     case '2':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: BitOp V[${x}] = V[${x}] AND V[${y}`);
-                            const res = this._registers.getVRegister(x) & this._registers.getVRegister(y);
-                            this._registers.setVRegister(x, res);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVxAndVy(this, x, y);
+                        };
                     case '3':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: BitOp V[${x}] = V[${x}] XOR V[${y}`);
-                            const res = this._registers.getVRegister(x) ^ this._registers.getVRegister(y);
-                            this._registers.setVRegister(x, res);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVxXorVy(this, x, y);
+                        };
                     case '4':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: ADD V[${x}] = V[${x}] + V[${y}]`);
-                            let value = this._registers.getVRegister(x) + this._registers.getVRegister(y);
-                            if(value > 255) {
-                                this._registers.setVRegister(15, 1);
-                            }
-                            this._registers.setVRegister(x, value);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVxPlusVy(this, x, y);
+                        };
                     case '5':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: SUB V[${x}] = V[${x}] - V[${y}]`);
-                            const vX = this._registers.getVRegister(x);
-                            const vY = this._registers.getVRegister(y);
-                            const value = vX - vY;
-
-                            if(vX > vY) {
-                                this._registers.setVRegister(15, 1);
-                            } else {
-                                this._registers.setVRegister(15, 0);
-                            }
-
-                            this._registers.setVRegister(x, value);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVxMinusVy(this, x, y);
+                        };
                     case '6':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: BitOP V[${x}] = V[${y}] >> 1`);
-                            const vY = this._registers.getVRegister(y);
-                            const leastSignificantBit = vY % 2
-                            this._registers.setVRegister(15, leastSignificantBit);
-                            const res = vY >> 1;
-                            this._registers.setVRegister(x, res);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxToVyShiftedRight(this, x, y);
+                        };
                     case '7':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: SUB V[${x}] = V[${y}] - V[${x}]`);
-                            const vX = this._registers.getVRegister(x);
-                            const vY = this._registers.getVRegister(y);
-                            const value = vY - vX;
-
-                            if(vY > vX) {
-                                this._registers.setVRegister(15, 1);
-                            } else {
-                                this._registers.setVRegister(15, 0);
-                            }
-
-                            this._registers.setVRegister(x, value);
-                        }
-                        break;
+                        return () => {
+                            IS.setVxEqualToVxMinusVy(this, y, x);
+                        };
                     case 'E':
-                        instructionFunction = () => {
+                        return () => {
                             // console.log(`${insturction}: BitOP V[${x}] = V[${y}] << 1`);
-                            const vY = this._registers.getVRegister(y);
-                            const mostSignificantBit = vY > 127? 1 : 0;
-                            this._registers.setVRegister(15, mostSignificantBit);
-                            const res = vY << 1;
-                            this._registers.setVRegister(x, res);
-                        }
-                        break;
+                            IS.setVxToVyShiftedLeft(this, x, y);
+                        };
                     default:
-                        instructionFunction = () => {
-                            // console.log(`${insturction} is not defined`);
-                        }
-                }
-                break;
+                        return () => {
+                            IS.invalidInstruction(this);
+                        };
+                };
             case '9':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Skip if(V[${x}] != v[${y}])`);
-                    if(this._registers.getVRegister(x) !== this._registers.getVRegister(y)) {
-                        this.incrementProgramCounter();
-                    }
-                }
-                break;
+                return () => {
+                    IS.skipIfVxNotEqualsVy(this, x, y);
+                };
             case 'A':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Set I = 0x${n3}`);
-                    this._registers.I = i3;
-                }
-                break;
+                return () => {
+                    IS.setI(this, i3);
+                };
             case 'B':
-                instructionFunction = () => {
+                return () => {
                     // console.log(`${insturction}: PC = V0 + 0x${n3}`);
-                    this._programCounter = (this._registers.getVRegister(0) + i3) & 0x0FF;
-                }
-                break;
+                    IS.setProgramCounterToV0PlusNNN(this, i3);
+                };
             case 'C':
-                instructionFunction = () => {
-                    // console.log(`${insturction}: Rand V[${x}] = rand & 0x${n2}`);
-                    this._registers.setVRegister(x, Math.floor(Math.random() * 255) & i2);
-                }
-                break;
+                return () => {
+                    IS.setVxToRandom(this, x);
+                };
             case 'D':
-                instructionFunction = () => {
-                    //TODO: fix glitchy drawing
-                    // console.log(`${insturction}: draw(V[${x}],V[${y}], 0x${n1})`);
-                    
-                    let sprite = new Uint8Array(8);
-
-                    for(let i = 0; i < i1; i++) {
-                        let byte = this._memory.getValueAt(this._registers.I + i);
-                        let byteText = byte.toString(2);
-                        while(byteText.length < 8) {
-                            byteText = '0' + byteText;
-                        }
-                        sprite.set([byte], i);
-                    }
-
-                    let collision = this.frameBuffer.draw(this._registers.getVRegister(x), this._registers.getVRegister(y), sprite, i1);
-
-                    if(collision) {
-                        this._registers.setVRegister(15, 1);
-                    }
-                    else {
-                        this._registers.setVRegister(15, 0);
-                    }
-                }
-                break;
+                return () => {
+                    IS.drawNofSpriteAtXY(this, x, y, i1);
+                };
             case 'E':
                 switch(n2) {
                     case '9E':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Skip if(key() == v[${x}])`);
-                            if(this._input.getKey(this._registers.getVRegister(x)) === 1) {
-                                this.incrementProgramCounter();
-                            }
-                        }
-                        break;
+                        return () => {
+                            IS.skipIfKeyInVxIsSet(this, x);
+                        };
                     case 'A1':
-                        instructionFunction = () => {
-                            // console.log(`${insturction}: Skip if(key() != v[${x}])`);
-                            if(this._input.getKey(this._registers.getVRegister(x)) !== 1) {
-                                this.incrementProgramCounter();
-                            }
-                        }
-                        break;
+                        return () => {
+                            IS.skipIfKeyInVxIsNotSet(this, x);
+                        };
                     default:
-                        instructionFunction = () => {
-                            // console.log(`${insturction} is not defined`);
-                        }
-                }
-                break;
+                        return () => {
+                            IS.invalidInstruction(this);
+                        };
+                };
             case 'F':
                 switch(n2) {
                     case '07':
