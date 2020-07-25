@@ -29,7 +29,7 @@ export function jump(core: Chip8Core, address: number): void {
 export function call(core: Chip8Core, address: number): void {
     // console.log(`${insturction}: Call $${i3}`);
     core._stack.push(core._programCounter);
-    core._programCounter = address;
+    core._programCounter = address - 2;
 }
 
 export function skipIfVxEqualsNN(core: Chip8Core, x: number, NN: number): void {
