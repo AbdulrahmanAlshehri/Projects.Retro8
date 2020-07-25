@@ -110,7 +110,7 @@ export function setVxEqualToVxMinusVy(core: Chip8Core, x: number, y: number): vo
 }
 
 export function setVxToVyShiftedRight(core: Chip8Core, x: number, y: number): void {
-    const vY = core._registers.getVRegister(x);
+    const vY = core._registers.getVRegister(y);
     const leastSignificantBit = vY % 2
     core._registers.setVRegister(15, leastSignificantBit);
     const res = vY >> 1;
@@ -119,7 +119,7 @@ export function setVxToVyShiftedRight(core: Chip8Core, x: number, y: number): vo
 
 
 export function setVxToVyShiftedLeft(core: Chip8Core, x: number, y: number): void {
-    const vY = core._registers.getVRegister(x);
+    const vY = core._registers.getVRegister(y);
     const mostSignificantBit = vY > 127? 1 : 0;
     core._registers.setVRegister(15, mostSignificantBit);
     const res = vY << 1;
@@ -210,7 +210,7 @@ export function storeRegistersUpToVxInMemory(core: Chip8Core, x: number): void {
     for(let i = 0; i <= x; i++) {
         core._memory.setValueAt(core._registers.I + i, core._registers.getVRegister(i));
     }
-    // core._registers.I += x+ 1;
+    core._registers.I += x+ 1;
 }
 
 export function loadRegistersUpToVxFromMemeory(core: Chip8Core, x: number): void {
@@ -218,8 +218,9 @@ export function loadRegistersUpToVxFromMemeory(core: Chip8Core, x: number): void
         const address = core._registers.I + i;
         const memoryValue = core._memory.getValueAt(address);
         core._registers.setVRegister(i, memoryValue);
+
     }
-    // core._registers.I += x+ 1;
+    core._registers.I += x+ 1;
 }
 
 export function waitForInput(core: Chip8Core, x: number): void {
