@@ -3,6 +3,7 @@ import { Registers } from './registers';
 import { Stack } from './stack';
 import { FrameBuffer } from './frameBuffer';
 import { Input } from './input';
+import { Audio } from './audio';
 
 export class Chip8Core {
 
@@ -10,6 +11,7 @@ export class Chip8Core {
     private _registers: Registers;
     private _stack: Stack;
     private _frameBuffer: FrameBuffer;
+    private _audio: Audio;
     private _input: Input;
     private _programCounter: number;
     private PROGRAM_COUNTER_INITIAL_VALUE = 512;
@@ -24,6 +26,7 @@ export class Chip8Core {
         this._registers = new Registers();
         this._stack = new Stack();
         this._frameBuffer = new FrameBuffer();
+        this._audio = new Audio();
         this._input = new Input();
         this._programCounter = this.PROGRAM_COUNTER_INITIAL_VALUE;
     }
@@ -39,13 +42,27 @@ export class Chip8Core {
 
     executeCycle() {
         if(!this.isHalted) {
+            this.decrementTimers();
             const currentInsturction: string = this._memory.getInstructionAtAddress(this._programCounter);
             const instructionFunction: Function = this.decodeInstruction(currentInsturction);
             instructionFunction();
+            if(this._registers.soundRegister > 0) {
+                this._audio.play();
+            } else {
+                this._audio.stop();
+            }
             this.incrementProgramCounter();
         }
     }
 
+    decrementTimers() {
+        if(this._registers.delayRegister > 0) {
+            this._registers.delayRegister -= 1;
+        }
+        if(this._registers.soundRegister > 0) {
+            this._registers.soundRegister -= 1;
+        }
+    }
     decodeInstruction(insturction: string): Function {
         let instructionFunction: Function;
         const i1 = parseInt(insturction.substring(3), 16);
@@ -115,7 +132,7 @@ export class Chip8Core {
             case '1':
                 instructionFunction = () => {
                     console.log(`${insturction}: Jump $${i3}`);
-                    this._programCounter = i3;
+                    this._programCounter = i3 - 2;
                 }
                 break;
             case '2':
