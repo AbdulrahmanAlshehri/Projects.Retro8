@@ -57,7 +57,7 @@ export class Chip8Component implements OnInit, AfterViewInit {
     this._animationLoop = setInterval(() => {
       this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
       this.drawFrame(this._currentFrame);
-    }, 50);
+    }, 16);
   }
 
   onNextFrameClick() {
