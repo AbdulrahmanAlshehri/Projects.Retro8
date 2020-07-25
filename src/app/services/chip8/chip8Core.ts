@@ -216,9 +216,8 @@ export class Chip8Core {
                         instructionFunction = () => {
                             console.log(`${insturction}: ADD V[${x}] = V[${x}] + V[${y}]`);
                             let value = this._registers.getVRegister(x) + this._registers.getVRegister(y);
-                            if(value >= 256) {
+                            if(value > 255) {
                                 this._registers.setVRegister(15, 1);
-                                value =  value - 255;
                             }
                             this._registers.setVRegister(x, value);
                         }
