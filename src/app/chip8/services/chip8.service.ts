@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chip8Core } from './core/chip8Core';
+import { Chip8Core } from '../core/chip8Core';
 
 @Injectable({
   providedIn: 'root'
