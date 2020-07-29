@@ -1,12 +1,12 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Chip8Service } from 'src/app/services/chip8/chip8.service';
+import { Chip8Service } from 'src/app/chip8/services/chip8.service';
 
 @Component({
-  selector: 'app-chip8',
-  templateUrl: './chip8.component.html',
-  styleUrls: ['./chip8.component.css']
+  selector: 'chip8Page',
+  templateUrl: './chip8Page.component.html',
+  styleUrls: ['./chip8Page.component.css']
 })
-export class Chip8Component implements OnInit, AfterViewInit {
+export class Chip8PageComponent implements OnInit, AfterViewInit {
   
   @ViewChild('display')
   display: ElementRef<HTMLCanvasElement>;
