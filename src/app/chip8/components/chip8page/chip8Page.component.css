@@ -1,1 +1,12 @@
-canvas{ border: 1px solid black; }
+
+canvas { border: 1px solid black; }
+
+.controls {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+}
+
+.pointer-parent {
+    cursor: pointer;
+}

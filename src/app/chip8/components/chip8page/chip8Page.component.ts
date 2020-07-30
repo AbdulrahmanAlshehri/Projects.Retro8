@@ -13,7 +13,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   public context: CanvasRenderingContext2D;
 
-  private _animationLoop;
+  public gameName: string = "Insert Game";
 
   private _currentFrame: number[][];
 
@@ -46,6 +46,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
     };
 
     fileReader.readAsArrayBuffer(files.item(0));
+    this.gameName = files.item(0).name;
     
   }
 
@@ -57,7 +58,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
   onStartClick(){
     this.isRunning = true;
     this.chip8Service.insertRom(this._currentRom);
-    this._animationLoop = window.requestAnimationFrame(this.getNextFrame);
+    window.requestAnimationFrame(this.getNextFrame);
   }
 
   onNextFrameClick() {
@@ -76,6 +77,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   onResetClick() {
     this.chip8Service.resetCore();
+    this.gameName = "Insert Game";
   }
 
   getNextFrame() {

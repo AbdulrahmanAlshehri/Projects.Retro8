@@ -1,14 +1,17 @@
-
-<div>
-    <label for="inputRom">Select a chip8 Rom:</label>
-    <input type="file" id="inputRom" name="inputRom" (change)="handleRomLoad($event.target.files)"/>
+<div class="controls">
+    <div>
+        <button mat-raised-button color="primary" (click)="onStartClick()">Start</button>
+        <button mat-raised-button color="accent" (click)="onNextFrameClick()">Next</button>
+        <button mat-raised-button color="warn" (click)="onStopClick()">Pause</button>
+        <button mat-raised-button color="warn" (click)="onResetClick()">Reset</button>
+        <button mat-raised-button class="pointer-parent">
+            <label for="inputRom" class="pointer-parent">
+                {{gameName}}
+            </label>
+        </button>
+        <input type="file" id="inputRom" name="inputRom" (change)="handleRomLoad($event.target.files)" hidden/>
+    </div>
 </div>
 <div>
-    <div class="controls">
-        <input type="button" value="start" (click)="onStartClick()">
-        <input type="button" value="NextFrame" (click)="onNextFrameClick()">
-        <input type="button" value="stop" (click)="onStopClick()">
-        <input type="button" value="reset" (click)="onResetClick()">
-    </div>
     <canvas #display width="512" height="256"></canvas>
 </div>
