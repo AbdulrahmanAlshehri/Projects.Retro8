@@ -6,3 +6,7 @@ canvas { border: 1px solid black; }
     grid-template-columns: auto;
     grid-template-rows: auto;
 }
+
+.pointer-parent {
+    cursor: pointer;
+}

@@ -13,6 +13,8 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   public context: CanvasRenderingContext2D;
 
+  public gameName: string = "Insert Game";
+
   private _currentFrame: number[][];
 
   private _currentRom: Uint8Array;
@@ -44,6 +46,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
     };
 
     fileReader.readAsArrayBuffer(files.item(0));
+    this.gameName = files.item(0).name;
     
   }
 
@@ -74,6 +77,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   onResetClick() {
     this.chip8Service.resetCore();
+    this.gameName = "Insert Game";
   }
 
   getNextFrame() {
