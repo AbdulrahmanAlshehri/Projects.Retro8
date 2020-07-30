@@ -3,13 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { Chip8PageComponent } from './components/chip8page/chip8Page.component';
 
+import { MatButtonModule } from '@angular/material/button';
+
+
 
 @NgModule({
   declarations: [
     Chip8PageComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule
   ],
   exports: [
     Chip8PageComponent

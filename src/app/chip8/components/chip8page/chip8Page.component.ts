@@ -13,8 +13,6 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   public context: CanvasRenderingContext2D;
 
-  private _animationLoop;
-
   private _currentFrame: number[][];
 
   private _currentRom: Uint8Array;
@@ -57,7 +55,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
   onStartClick(){
     this.isRunning = true;
     this.chip8Service.insertRom(this._currentRom);
-    this._animationLoop = window.requestAnimationFrame(this.getNextFrame);
+    window.requestAnimationFrame(this.getNextFrame);
   }
 
   onNextFrameClick() {
