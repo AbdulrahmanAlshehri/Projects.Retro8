@@ -14,7 +14,6 @@ export class Stack {
 
     public incrementStackPointer() {
         if(this._StackPointer >= this.STACK_SIZE) {
-            console.log('Stack is Full, cannot increment');
             return;
         }
         
@@ -23,7 +22,6 @@ export class Stack {
 
     public decrementStackPointer() {
         if(this._StackPointer <= 0) {
-            console.log('the stack is empty. cannot decrement it');
             return;
         }
 

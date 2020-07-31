@@ -174,15 +174,15 @@ export function skipIfKeyInVxIsNotSet(core: Chip8Core, x: number): void {
 }
 
 export function setVxEqualToDelayTimer(core: Chip8Core, x: number): void {
-    core._registers.setVRegister(x, core._registers.delayRegister);
+    core._registers.setVRegister(x, core._registers.delayTimer);
 }
 
 export function setDelayTimerEqualToVx(core: Chip8Core, x: number): void {
-    core._registers.delayRegister = core._registers.getVRegister(x);
+    core._registers.delayTimer = core._registers.getVRegister(x);
 }
 
 export function setSoundTimerEqualToVx(core: Chip8Core, x: number): void {
-    core._registers.soundRegister = core._registers.getVRegister(x);
+    core._registers.soundTimer = core._registers.getVRegister(x);
 }
 
 export function storeVxAsBinaryCodedDecimalInMemory(core: Chip8Core, x: number): void {

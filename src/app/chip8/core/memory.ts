@@ -1,3 +1,4 @@
+import { OpCode } from './opCode';
 
 
 export class Memory {
@@ -9,49 +10,27 @@ export class Memory {
     private PROGRAM_START_ADDRESS = 512;
 
     private FONT_SET: Uint8Array;
+
     constructor() {
         this.loadFontSet().then(_ => {
             this.clearMemory();
-            this.initMemory();
         });
     }
 
     clearMemory() {
         this._memory = new Uint8Array(this.MEMORY_SIZE);
-    }
-
-    initMemory() {
         this._memory.set(this.FONT_SET, 0);
     }
 
     loadRom(rom: Uint8Array) {
         this._memory.set(rom, this.PROGRAM_START_ADDRESS);
-        this.stringifyMemory()
     }
 
-    stringifyMemory() {
-        let memoryString: string[] = [];
-        
-        for(let i = 0; i < this._memory.length; i++) {
-           memoryString[i] = this._memory[i].toString(16);
-        }
+    getOpCodeAt(address: number): OpCode {
+        let firstByte: number = this._memory[address];
+        let secondByte: number = this._memory[address+1];
 
-        return memoryString;
-    }
-
-    getInstructionAtAddress(address: number): string {
-        let firstByte: string = this._memory[address].toString(16);
-        let secondByte: string = this._memory[address+1].toString(16);
-
-        if(firstByte.length == 1) {
-            firstByte = '0' + firstByte;
-        }
-
-        if(secondByte.length == 1) {
-            secondByte = '0' + secondByte;
-        }
-
-        return (firstByte + secondByte).toUpperCase();
+        return new OpCode(firstByte, secondByte);
     }
 
     getValueAt(address: number): number {
@@ -68,6 +47,4 @@ export class Memory {
         });
         this.FONT_SET = new Uint8Array(fontset);
     }
-
-
 }

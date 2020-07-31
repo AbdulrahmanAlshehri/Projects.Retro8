@@ -4,23 +4,24 @@ export class Registers {
 
     private _delayRegister: number;
 
-    get delayRegister() {
+    get delayTimer() {
         return this._delayRegister;
     }
 
-    set delayRegister(value: number) {
+    set delayTimer(value: number) {
         this._delayRegister = value;
     }
 
     private _soundRegister: number;
 
-    get soundRegister() {
+    get soundTimer() {
         return this._soundRegister;
     }
 
-    set soundRegister(value: number) {
+    set soundTimer(value: number) {
         this._soundRegister = value;
     }
+    
     private _I: number;
 
     get I() {
@@ -35,8 +36,8 @@ export class Registers {
 
     constructor() {
         this._V = new Uint8Array(this.REGISTERS_COUNT);
-        this.delayRegister = 0;
-        this.soundRegister = 0;
+        this.delayTimer = 0;
+        this.soundTimer = 0;
         this._I = 0;
     }
 
