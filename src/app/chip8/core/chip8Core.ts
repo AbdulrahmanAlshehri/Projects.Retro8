@@ -69,18 +69,11 @@ export class Chip8Core {
         this.tempVNum = vNum;
         this.isHalted = true;
     }
-
-    setInput(key: number) {
-        this._input.setKey(key);
-        if(this.isHalted) {
-            this.isHalted = false;
-        }
-    }
     
     onKeyDown(e:KeyboardEvent) {
         const keyNumber = parseInt(e.key, 16);
         if(keyNumber < 16) {
-            this.setInput(keyNumber);
+            this._input.setKey(keyNumber);
         }
 
         if(this.isHalted) {
