@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Chip8Service } from 'src/app/chip8/services/chip8.service';
+import { OpCode } from '../../core/opCode';
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'chip8Page',
@@ -11,9 +13,18 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
   @ViewChild('display')
   display: ElementRef<HTMLCanvasElement>;
 
+  @ViewChild(MatTable)
+  table: MatTable<OpCode[]>;
+
+
   public context: CanvasRenderingContext2D;
 
   public gameName: string = "Insert Game";
+
+  public gameAssembly: OpCode[];
+
+  public gameAssemblyColumns: string[] = ['OpCode', 'Assembly', 'Description'];
+
 
   private _currentFrame: number[][];
 
@@ -78,6 +89,12 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
   onResetClick() {
     this.chip8Service.resetCore();
     this.gameName = "Insert Game";
+  }
+
+  onDisassembleClick() {
+    this.gameAssembly = this.chip8Service.disassembleRom(this._currentRom);
+
+    this.table.renderRows();
   }
 
   getNextFrame() {

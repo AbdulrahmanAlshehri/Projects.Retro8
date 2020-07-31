@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Chip8Core } from '../core/chip8Core';
+import { OpCode } from '../core/opCode';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,9 @@ export class Chip8Service {
   getNextFrame(core: Chip8Core): number[][] {
     core.executeCycle();
     return core.getFrame();
+  }
+
+  disassembleRom(rom: Uint8Array): OpCode[] {
+    return this._chip8Core.disassembleRom(rom);
   }
 }

@@ -10,3 +10,7 @@ canvas { border: 1px solid black; }
 .pointer-parent {
     cursor: pointer;
 }
+
+table {
+    width: 100%;
+}

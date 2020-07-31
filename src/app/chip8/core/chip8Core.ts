@@ -88,4 +88,12 @@ export class Chip8Core {
             this._input.unsetKey(keyNumber);
         }
     }
+
+    disassembleRom(rom: Uint8Array): OpCode[] {
+        let opCodesArray: OpCode[] = [];
+        for(let i = 0; i < rom.length; i = i +2) {
+            opCodesArray.push(new OpCode(rom[i], rom[i+1]));
+        }
+        return opCodesArray;
+    }
 }
