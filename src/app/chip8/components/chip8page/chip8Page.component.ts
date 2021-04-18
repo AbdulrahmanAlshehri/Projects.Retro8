@@ -21,7 +21,32 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   public gameName: string = "Insert Game";
 
-  public roms: string[] = ['Fishie.ch8']
+  public roms: string[] = [
+    '15PUZZLE.ch8',
+    'BLINKY.ch8',
+    'BLITZ.ch8',
+    'BRIX.ch8',
+    'CONNECT4.ch8',
+    'Fishie.ch8',
+    'GUESS.ch8',
+    'HIDDEN.ch8',
+    'INVADERS.ch8',
+    'KALEID.ch8',
+    'MAZE.ch8',
+    'MERLIN.ch8',
+    'MISSILE.ch8',
+    'PONG.ch8',
+    'PONG2.ch8',
+    'PUZZLE.ch8',
+    'SYZYGY.ch8',
+    'TANK.ch8',
+    'TETRIS.ch8',
+    'TICTAC.ch8',
+    'UFO.ch8',
+    'VBRIX.ch8',
+    'VERS.ch8',
+    'WIPEOFF.ch8'
+  ]
 
   public selectedRom: string;
 
@@ -92,7 +117,7 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   onResetClick() {
     this.chip8Service.resetCore();
-    this.gameName = "Insert Game";
+    this.selectedRom= null
   }
 
   onDisassembleClick() {
