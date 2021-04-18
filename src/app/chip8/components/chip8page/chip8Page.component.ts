@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Chip8Service } from 'src/app/chip8/services/chip8.service';
 import { OpCode } from '../../core/opCode';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'chip8Page',
@@ -21,9 +21,13 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
 
   public gameName: string = "Insert Game";
 
+  public roms: string[] = ['Fishie.ch8']
+
+  public selectedRom: string;
+
   public gameAssembly: OpCode[];
 
-  public gameAssemblyColumns: string[] = ['OpCode', 'Assembly', 'Description'];
+  public gameAssemblyColumns: string[] = ['lineNumber','OpCode', 'Assembly', 'Description'];
 
 
   private _currentFrame: number[][];
@@ -103,6 +107,12 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
     if(this.isRunning) {
       requestAnimationFrame(this.getNextFrame);
     }
+  }
+  async onRomChange(romName: string) {
+    const rom = await fetch(`assets/roms/chip8/${romName}`).then(res => {
+      return res.arrayBuffer()
+  });
+  this._currentRom = this.readRawRom(rom);
   }
   drawFrame(frame: number[][]) {
     this.context.clearRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);

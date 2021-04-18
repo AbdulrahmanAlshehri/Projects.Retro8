@@ -1,49 +1,86 @@
-<div class="controls">
-    <div>
-        <button mat-raised-button color="primary" (click)="onStartClick()">Start</button>
-        <button mat-raised-button color="accent" (click)="onNextFrameClick()">Next</button>
-        <button mat-raised-button color="warn" (click)="onStopClick()">Pause</button>
-        <button mat-raised-button color="warn" (click)="onResetClick()">Reset</button>
-        <button mat-raised-button class="pointer-parent">
-            <label for="inputRom" class="pointer-parent">
-                {{gameName}}
-            </label>
-        </button>
-        <input type="file" id="inputRom" name="inputRom" (change)="handleRomLoad($event.target.files)" hidden/>
-        <button mat-raised-button color="warn" (click)="onDisassembleClick()">Disassemble</button>
+<div class="layout">
+    <div class="left-column">
+        <div class="controls">
+            <div>
+                <mat-form-field appearance="fill" >
+                    <mat-label>Select an option</mat-label>
+                    <mat-select [(value)]="selectedRom" (selectionChange)="onRomChange(selectedRom)">
+                        <mat-option *ngFor="let rom of roms" [value]="rom">{{ rom }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button color="primary" (click)="onStartClick()">Start</button>
+                <button mat-raised-button color="accent" (click)="onNextFrameClick()">Next</button>
+                <button mat-raised-button color="warn" (click)="onStopClick()">Pause</button>
+                <button mat-raised-button color="warn" (click)="onResetClick()">Reset</button>
+                <button mat-raised-button color="warn" (click)="onDisassembleClick()">Disassemble</button>
+            </div>
+        </div>
+        <div class="screen">
+            <canvas #display width="512" height="256"></canvas>
+        </div>
+        <div class="keyboard-controls">
+            <h3>keyboard controls:</h3>
+            <table class="table table-condensed commands center">
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>q</td>
+                        <td>w</td>
+                        <td>e</td>
+                        <td>r</td>
+                    </tr>
+                    <tr>
+                        <td>a</td>
+                        <td>s</td>
+                        <td>d</td>
+                        <td>f</td>
+                    </tr>
+                    <tr>
+                        <td>z</td>
+                        <td>x</td>
+                        <td>c</td>
+                        <td>v</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<div>
-    <canvas #display width="512" height="256"></canvas>
-</div>
+    <div class="right-column">
 
-<div>
-    <table mat-table [dataSource]="gameAssembly">
-    <!-- Position Column -->
-        <!-- <ng-container matColumnDef="#">
-            <th mat-header-cell *matHeaderCellDef> # </th>
-            <td mat-cell *matCellDef="let opCode"> {{opCode.position}} </td>
-        </ng-container> -->
-  
-      <!-- Name Column -->
-        <ng-container matColumnDef="OpCode">
-            <th mat-header-cell *matHeaderCellDef> OpCode </th>
-            <td mat-cell *matCellDef="let opCode"> {{opCode.opCode}} </td>
-        </ng-container>
-  
-      <!-- Weight Column -->
-        <ng-container matColumnDef="Assembly">
-            <th mat-header-cell *matHeaderCellDef> Assembly </th>
-            <td mat-cell *matCellDef="let opCode"> {{opCode.opCodeString}} </td>
-        </ng-container>
-  
-      <!-- Symbol Column -->
-        <ng-container matColumnDef="Description">
-            <th mat-header-cell *matHeaderCellDef> Description </th>
-            <td mat-cell *matCellDef="let opCode"> {{opCode.opCodeDescription}} </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="gameAssemblyColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: gameAssemblyColumns;"></tr>
-    </table>
+        <div class="rom-assmebly">
+            <table class="disassembly-table" mat-table [dataSource]="gameAssembly">
+            <!-- Position Column -->
+                <ng-container matColumnDef="lineNumber">
+                    <th mat-header-cell *matHeaderCellDef> # </th>
+                    <td mat-cell *matCellDef="let opCode"> {{gameAssembly.indexOf(opCode)}} </td>
+                </ng-container>
+        
+            <!-- Name Column -->
+                <ng-container matColumnDef="OpCode">
+                    <th mat-header-cell *matHeaderCellDef> OpCode </th>
+                    <td mat-cell *matCellDef="let opCode"> {{opCode.opCode}} </td>
+                </ng-container>
+        
+            <!-- Weight Column -->
+                <ng-container matColumnDef="Assembly">
+                    <th mat-header-cell *matHeaderCellDef> Assembly </th>
+                    <td mat-cell *matCellDef="let opCode"> {{opCode.opCodeString}} </td>
+                </ng-container>
+        
+            <!-- Symbol Column -->
+                <ng-container matColumnDef="Description">
+                    <th mat-header-cell *matHeaderCellDef> Description </th>
+                    <td mat-cell *matCellDef="let opCode"> {{opCode.opCodeDescription}} </td>
+                </ng-container>
+        
+                <tr mat-header-row *matHeaderRowDef="gameAssemblyColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: gameAssemblyColumns;"></tr>
+            </table>
+        </div>
+    </div>
 </div>

@@ -11,6 +11,23 @@ canvas { border: 1px solid black; }
     cursor: pointer;
 }
 
-table {
+.disassembly-table {
     width: 100%;
+}
+
+.layout {
+    display: grid;
+    width: 90vw;
+    grid-template-columns: 50% 50%;
+}
+
+.left-column {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+
+.right-column {
+    grid-column-start: 2;
+    grid-column-end: 3;
 }

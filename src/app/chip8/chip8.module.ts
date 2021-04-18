@@ -6,6 +6,7 @@ import { Chip8PageComponent } from './components/chip8page/chip8Page.component';
 import { MatButtonModule } from '@angular/material/button';
 
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -16,7 +17,8 @@ import { MatTableModule } from '@angular/material/table';
   imports: [
     CommonModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    MatSelectModule
   ],
   exports: [
     Chip8PageComponent
