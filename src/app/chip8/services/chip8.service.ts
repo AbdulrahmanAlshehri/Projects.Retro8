@@ -22,8 +22,10 @@ export class Chip8Service {
     this._chip8Core = new Chip8Core();
   }
 
-  getNextFrame(core: Chip8Core): number[][] {
-    core.executeCycle();
+  getNextFrame(core: Chip8Core, speed=1): number[][] {
+    for(let i=0; i < speed; i++) {
+      core.executeCycle();
+    }
     return core.getFrame();
   }
 
