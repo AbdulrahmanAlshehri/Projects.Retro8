@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SystemControllerComponent } from './system-controller.component';
 
-describe('PageComponent', () => {
+describe('SystemControllerComponent', () => {
   let component: SystemControllerComponent;
   let fixture: ComponentFixture<SystemControllerComponent>;
 

@@ -6,9 +6,7 @@
             (nextEvent)="onNextFrameClick()"
             (resetEvent)="onResetClick()"
             (romChangeEvent)="onRomChange($event)"></chip8-system-controller>
-        <div class="screen">
-            <canvas #display width="512" height="256"></canvas>
-        </div>
+        <chip8-display #display></chip8-display>
         <chip8-game-controller></chip8-game-controller>
     </div>
     <div class="right-column">

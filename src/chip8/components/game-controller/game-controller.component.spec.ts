@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameControllerComponent } from './game-controller.component';
 
-describe('PageComponent', () => {
+describe('GameControllerComponent', () => {
   let component: GameControllerComponent;
   let fixture: ComponentFixture<GameControllerComponent>;
 
