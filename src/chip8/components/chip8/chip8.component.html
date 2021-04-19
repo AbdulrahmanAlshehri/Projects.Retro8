@@ -1,11 +1,13 @@
+
+
 <div class="layout">
-    <div class="left-column">
+    <div class="left-column machine">
         <chip8-system-controller 
-            (startEvent)="onStartClick()" 
-            (pauseEvent)="onStopClick()" 
-            (nextEvent)="onNextFrameClick()"
-            (resetEvent)="onResetClick()"
-            (romChangeEvent)="onRomChange($event)"></chip8-system-controller>
+        (startEvent)="onStartClick()" 
+        (pauseEvent)="onStopClick()" 
+        (nextEvent)="onNextFrameClick()"
+        (resetEvent)="onResetClick()"
+        (romChangeEvent)="onRomChange($event)"></chip8-system-controller>
         <chip8-display #display></chip8-display>
         <chip8-game-controller (gameControllerKeyDownEvent)="onGameControllerKeyDown($event)" (gameControllerKeyUpEvent)="onGameControllerKeyUp($event)"></chip8-game-controller>
     </div>
