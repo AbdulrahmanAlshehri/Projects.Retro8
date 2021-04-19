@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Chip8Component } from './components/chip8/chip8.component';
-import { GameControllerComponent } from './components/game-controller/game-controller.component';
 import { DebuggerComponent } from './components/debugger/debugger.component';
+import { GameControllerComponent } from './components/game-controller/game-controller.component';
+import { SystemControllerComponent } from './components/system-controller/system-controller.component';
 
 import { MatButtonModule } from '@angular/material/button';
 
@@ -14,7 +15,8 @@ import { MatSelectModule } from '@angular/material/select';
   declarations: [
     Chip8Component,
     DebuggerComponent,
-    GameControllerComponent
+    GameControllerComponent,
+    SystemControllerComponent
   ],
   imports: [
     CommonModule,

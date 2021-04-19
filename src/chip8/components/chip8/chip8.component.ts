@@ -52,9 +52,6 @@ export class Chip8Component implements OnInit, AfterViewInit {
 
   public gameAssembly: OpCode[];
 
-  public gameAssemblyColumns: string[] = ['lineNumber','OpCode', 'Assembly', 'Description'];
-
-
   private _currentFrame: number[][];
 
   private _currentRom: Uint8Array;
@@ -74,20 +71,6 @@ export class Chip8Component implements OnInit, AfterViewInit {
     this.context = this.display.nativeElement.getContext('2d');
     this.context.scale(8, 8);
 
-  }
-
-  handleRomLoad(files: FileList) {
-    const fileReader: FileReader = new FileReader();
-    
-    fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
-      const raw: ArrayBuffer = e.target.result as ArrayBuffer;
-
-      this._currentRom = this.readRawRom(raw);
-    };
-
-    fileReader.readAsArrayBuffer(files.item(0));
-    this.gameName = files.item(0).name;
-    
   }
 
   readRawRom(arrayBuffer: ArrayBuffer) {
@@ -127,15 +110,15 @@ export class Chip8Component implements OnInit, AfterViewInit {
       requestAnimationFrame(this.getNextFrame);
     }
   }
-  async onRomChange(romName: string) {
+  async onRomChange(event) {
     this.chip8Service.resetCore();
+    let romName = event;
+    console.log(event);
     const rom = await fetch(`assets/roms/chip8/${romName}`).then(res => {
       return res.arrayBuffer()
-  });
-  this._currentRom = this.readRawRom(rom);
-  this.gameAssembly = this.chip8Service.disassembleRom(this._currentRom);
-
-  this.table.renderRows();
+    });
+    this._currentRom = this.readRawRom(rom);
+    this.gameAssembly = this.chip8Service.disassembleRom(this._currentRom);
   }
   drawFrame(frame: number[][]) {
     this.context.clearRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);
