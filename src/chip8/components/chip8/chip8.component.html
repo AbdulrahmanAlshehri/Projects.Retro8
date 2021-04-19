@@ -7,7 +7,7 @@
             (resetEvent)="onResetClick()"
             (romChangeEvent)="onRomChange($event)"></chip8-system-controller>
         <chip8-display #display></chip8-display>
-        <chip8-game-controller></chip8-game-controller>
+        <chip8-game-controller (gameControllerKeyDownEvent)="onGameControllerKeyDown($event)" (gameControllerKeyUpEvent)="onGameControllerKeyUp($event)"></chip8-game-controller>
     </div>
     <div class="right-column">
         <chip8-debugger [gameAssembly]="gameAssembly"></chip8-debugger>

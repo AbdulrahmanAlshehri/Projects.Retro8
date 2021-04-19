@@ -24,8 +24,6 @@ export class Chip8Core {
     public tempVNum: number;
 
     constructor() {
-        window.addEventListener('keydown', (e) => this.onKeyDown(e));
-        window.addEventListener('keyup', (e) => this.onKeyUp(e));
     }
 
     insertRom(rom: Uint8Array) {
@@ -69,9 +67,8 @@ export class Chip8Core {
         this.tempVNum = vNum;
         this.isHalted = true;
     }
-    
-    onKeyDown(e:KeyboardEvent) {
-        const keyNumber = parseInt(e.key, 16);
+
+    onKeyDown(keyNumber: number) {
         if(keyNumber < 16) {
             this._input.setKey(keyNumber);
         }
@@ -82,12 +79,12 @@ export class Chip8Core {
         }
     }
 
-    onKeyUp(e: KeyboardEvent) {
-        const keyNumber = parseInt(e.key, 16);
+    onKeyUp(keyNumber: number) {
         if(keyNumber < 16) {
             this._input.unsetKey(keyNumber);
         }
     }
+
 
     disassembleRom(rom: Uint8Array): OpCode[] {
         let opCodesArray: OpCode[] = [];

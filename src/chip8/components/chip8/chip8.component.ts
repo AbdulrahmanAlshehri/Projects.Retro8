@@ -22,6 +22,8 @@ export class Chip8Component implements OnInit {
   constructor(
     private chip8Service: Chip8Service
   ) { 
+    window.addEventListener('keydown', (e) => this.chip8Service.onKeyDown(parseInt(e.key, 16)));
+    window.addEventListener('keyup', (e) => this.chip8Service.onKeyUp(parseInt(e.key, 16)));
     this.getNextFrame = this.getNextFrame.bind(this);
   }
 
@@ -61,14 +63,20 @@ export class Chip8Component implements OnInit {
       requestAnimationFrame(this.getNextFrame);
     }
   }
-  async onRomChange(event) {
+  async onRomChange(romName) {
     this.chip8Service.resetCore();
-    let romName = event;
-    console.log(event);
     const rom = await fetch(`assets/roms/chip8/${romName}`).then(res => {
       return res.arrayBuffer()
     });
     this._currentRom = this.readRawRom(rom);
     this.gameAssembly = this.chip8Service.disassembleRom(this._currentRom);
+  }
+
+  onGameControllerKeyDown(keyNumber: number) {
+    this.chip8Service.onKeyDown(keyNumber);
+  }
+
+  onGameControllerKeyUp(keyNumber: number) {
+    this.chip8Service.onKeyUp(keyNumber);
   }
 }

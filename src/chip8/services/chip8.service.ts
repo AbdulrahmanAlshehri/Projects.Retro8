@@ -32,4 +32,12 @@ export class Chip8Service {
   disassembleRom(rom: Uint8Array): OpCode[] {
     return this._chip8Core.disassembleRom(rom);
   }
+
+  onKeyDown(keyNumber: number) {
+    this._chip8Core.onKeyDown(keyNumber);
+  }
+
+  onKeyUp(keyNumber: number) {
+    this._chip8Core.onKeyUp(keyNumber);
+  }
 }

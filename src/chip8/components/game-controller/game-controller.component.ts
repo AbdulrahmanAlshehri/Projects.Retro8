@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'chip8-game-controller',
@@ -7,9 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameControllerComponent implements OnInit {
 
+  @Output()
+  gameControllerKeyDownEvent = new EventEmitter<number>();
+
+  @Output()
+  gameControllerKeyUpEvent = new EventEmitter<number>();
+  
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  onButtonMouseDown(button: string) {
+    this.gameControllerKeyDownEvent.emit(parseInt(button, 16));
+  }
+
+  onButtonMouseUp(button: string) {
+    this.gameControllerKeyUpEvent.emit(parseInt(button, 16));
+  }
 }
