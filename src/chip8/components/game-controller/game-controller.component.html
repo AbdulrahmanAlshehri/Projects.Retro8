@@ -1,31 +1,26 @@
-<div class="keyboard-controls">
-    <h3>keyboard controls:</h3>
-    <table class="table table-condensed commands center">
-        <tbody>
-            <tr>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('1')" (mouseup)="onButtonMouseUp('1')">1</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('2')" (mouseup)="onButtonMouseUp('2')">2</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('3')" (mouseup)="onButtonMouseUp('3')">3</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('C')" (mouseup)="onButtonMouseUp('C')">C</button></td>
-            </tr>
-            <tr>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('4')" (mouseup)="onButtonMouseUp('4')">4</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('5')" (mouseup)="onButtonMouseUp('5')">5</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('6')" (mouseup)="onButtonMouseUp('6')">6</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('D')" (mouseup)="onButtonMouseUp('D')">D</button></td>
-            </tr>
-            <tr>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('7')" (mouseup)="onButtonMouseUp('7')">7</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('8')" (mouseup)="onButtonMouseUp('8')">8</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('9')" (mouseup)="onButtonMouseUp('9')">9</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('E')" (mouseup)="onButtonMouseUp('E')">E</button></td>
-            </tr>
-            <tr>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('A')" (mouseup)="onButtonMouseUp('A')">A</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('0')" (mouseup)="onButtonMouseUp('0')">0</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('B')" (mouseup)="onButtonMouseUp('B')">B</button></td>
-                <td><button mat-raised-button color="primary" (mousedown)="onButtonMouseDown('F')" (mouseup)="onButtonMouseUp('F')">F</button></td>
-            </tr>
-        </tbody>
-    </table>
+<div class="game-controls">
+    <div class="first-row">
+        <button mat-raised-button (mousedown)="onButtonMouseDown('1')" (mouseup)="onButtonMouseUp('1')">1</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('2')" (mouseup)="onButtonMouseUp('2')">2</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('3')" (mouseup)="onButtonMouseUp('3')">3</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('C')" (mouseup)="onButtonMouseUp('C')">C</button>
+    </div>
+    <div class="second-row">
+        <button mat-raised-button (mousedown)="onButtonMouseDown('4')" (mouseup)="onButtonMouseUp('4')">4</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('5')" (mouseup)="onButtonMouseUp('5')">5</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('6')" (mouseup)="onButtonMouseUp('6')">6</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('D')" (mouseup)="onButtonMouseUp('D')">D</button>
+    </div>
+    <div class="third-row">
+        <button mat-raised-button (mousedown)="onButtonMouseDown('7')" (mouseup)="onButtonMouseUp('7')">7</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('8')" (mouseup)="onButtonMouseUp('8')">8</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('9')" (mouseup)="onButtonMouseUp('9')">9</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('E')" (mouseup)="onButtonMouseUp('E')">E</button>
+    </div>
+    <div class="forth-row">
+        <button mat-raised-button (mousedown)="onButtonMouseDown('A')" (mouseup)="onButtonMouseUp('A')">A</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('0')" (mouseup)="onButtonMouseUp('0')">0</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('B')" (mouseup)="onButtonMouseUp('B')">B</button>
+        <button mat-raised-button (mousedown)="onButtonMouseDown('F')" (mouseup)="onButtonMouseUp('F')">F</button>
+    </div>
 </div>

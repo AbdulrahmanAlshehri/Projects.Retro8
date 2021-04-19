@@ -1,0 +1,10 @@
+.game-controller {
+    display: grid;
+    grid-template-rows: 25% 25% 25% 25%;
+    height: 100%;
+    width: 100%;
+}
+
+button {
+    margin: 0.5%;
+}

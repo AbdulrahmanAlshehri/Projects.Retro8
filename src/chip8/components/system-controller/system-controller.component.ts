@@ -68,14 +68,6 @@ export class SystemControllerComponent implements OnInit {
     this.startEvent.emit(null);
   }
 
-  onPauseClick() {
-    this.pauseEvent.emit(null);
-  }
-
-  onNextClick() {
-    this.nextEvent.emit(null);
-  }
-
   onResetClick() {
     this.resetEvent.emit(null);
   }
