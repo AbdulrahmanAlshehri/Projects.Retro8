@@ -1,14 +1,14 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Chip8Service } from 'src/app/chip8/services/chip8.service';
-import { OpCode } from '../../core/opCode';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Chip8Service } from 'src/chip8/services/chip8.service';
+import { OpCode } from 'src/chip8/core/opCode';
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'chip8Page',
-  templateUrl: './chip8Page.component.html',
-  styleUrls: ['./chip8Page.component.css']
+  templateUrl: './chip8.component.html',
+  styleUrls: ['./chip8.component.css']
 })
-export class Chip8PageComponent implements OnInit, AfterViewInit {
+export class Chip8Component implements OnInit, AfterViewInit {
   
   @ViewChild('display')
   display: ElementRef<HTMLCanvasElement>;
@@ -120,12 +120,6 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
     this.selectedRom= null
   }
 
-  onDisassembleClick() {
-    this.gameAssembly = this.chip8Service.disassembleRom(this._currentRom);
-
-    this.table.renderRows();
-  }
-
   getNextFrame() {
     this._currentFrame = this.chip8Service.getNextFrame(this.chip8Service._chip8Core);
     this.drawFrame(this._currentFrame);
@@ -134,10 +128,14 @@ export class Chip8PageComponent implements OnInit, AfterViewInit {
     }
   }
   async onRomChange(romName: string) {
+    this.chip8Service.resetCore();
     const rom = await fetch(`assets/roms/chip8/${romName}`).then(res => {
       return res.arrayBuffer()
   });
   this._currentRom = this.readRawRom(rom);
+  this.gameAssembly = this.chip8Service.disassembleRom(this._currentRom);
+
+  this.table.renderRows();
   }
   drawFrame(frame: number[][]) {
     this.context.clearRect(0, 0, this.display.nativeElement.width, this.display.nativeElement.height);

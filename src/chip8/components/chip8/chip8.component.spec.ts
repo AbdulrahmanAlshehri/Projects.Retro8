@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Chip8PageComponent } from './chip8Page.component';
+import { Chip8Component } from './chip8.component';
 
 describe('Chip8Component', () => {
-  let component: Chip8PageComponent;
-  let fixture: ComponentFixture<Chip8PageComponent>;
+  let component: Chip8Component;
+  let fixture: ComponentFixture<Chip8Component>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ Chip8PageComponent ]
+      declarations: [ Chip8Component ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Chip8PageComponent);
+    fixture = TestBed.createComponent(Chip8Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

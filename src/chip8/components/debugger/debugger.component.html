@@ -1,0 +1,30 @@
+<div class="rom-assmebly">
+    <table class="disassembly-table" mat-table [dataSource]="gameAssembly">
+    <!-- Position Column -->
+        <ng-container matColumnDef="lineNumber">
+            <th mat-header-cell *matHeaderCellDef> # </th>
+            <td mat-cell *matCellDef="let opCode"> {{gameAssembly.indexOf(opCode)}} </td>
+        </ng-container>
+
+    <!-- Name Column -->
+        <ng-container matColumnDef="OpCode">
+            <th mat-header-cell *matHeaderCellDef> OpCode </th>
+            <td mat-cell *matCellDef="let opCode"> {{opCode.opCode}} </td>
+        </ng-container>
+
+    <!-- Weight Column -->
+        <ng-container matColumnDef="Assembly">
+            <th mat-header-cell *matHeaderCellDef> Assembly </th>
+            <td mat-cell *matCellDef="let opCode"> {{opCode.opCodeString}} </td>
+        </ng-container>
+
+    <!-- Symbol Column -->
+        <ng-container matColumnDef="Description">
+            <th mat-header-cell *matHeaderCellDef> Description </th>
+            <td mat-cell *matCellDef="let opCode"> {{opCode.opCodeDescription}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="gameAssemblyColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: gameAssemblyColumns;"></tr>
+    </table>
+</div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Chip8Core } from '../core/chip8Core';
-import { OpCode } from '../core/opCode';
+import { Chip8Core } from 'src/chip8/core/chip8Core';
+import { OpCode } from 'src/chip8/core/opCode';
 
 @Injectable({
   providedIn: 'root'

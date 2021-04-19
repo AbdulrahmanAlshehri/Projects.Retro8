@@ -1,0 +1,25 @@
+<div class="layout">
+    <div class="left-column">
+        <div class="controls">
+            <div>
+                <mat-form-field appearance="fill" >
+                    <mat-label>Select Game</mat-label>
+                    <mat-select [(value)]="selectedRom" (selectionChange)="onRomChange(selectedRom)">
+                        <mat-option *ngFor="let rom of roms" [value]="rom">{{ rom }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button color="primary" (click)="onStartClick()">Start</button>
+                <button mat-raised-button color="accent" (click)="onNextFrameClick()">Next</button>
+                <button mat-raised-button color="warn" (click)="onStopClick()">Pause</button>
+                <button mat-raised-button color="warn" (click)="onResetClick()">Reset</button>
+            </div>
+        </div>
+        <div class="screen">
+            <canvas #display width="512" height="256"></canvas>
+        </div>
+        <chip8-game-controller></chip8-game-controller>
+    </div>
+    <div class="right-column">
+        <chip8-debugger [gameAssembly]="gameAssembly"></chip8-debugger>
+    </div>
+</div>

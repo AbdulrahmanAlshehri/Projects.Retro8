@@ -11,10 +11,6 @@ canvas { border: 1px solid black; }
     cursor: pointer;
 }
 
-.disassembly-table {
-    width: 100%;
-}
-
 .layout {
     display: grid;
     width: 90vw;
