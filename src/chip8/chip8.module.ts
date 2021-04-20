@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { Chip8Component } from './components/chip8/chip8.component';
 import { DebuggerComponent } from './components/debugger/debugger.component';
@@ -24,7 +25,8 @@ import { DisplayComponent } from './components/display/display.component';
     CommonModule,
     MatButtonModule,
     MatTableModule,
-    MatSelectModule
+    MatSelectModule,
+    MatToolbarModule
   ],
   exports: [
     Chip8Component
