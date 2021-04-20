@@ -9,13 +9,13 @@ import { OpCode } from './opCode';
 
 export class Chip8Core {
 
-    public _memory = new Memory();
-    public _registers = new Registers();
-    public _stack = new Stack();
-    public _frameBuffer = new FrameBuffer();
-    public _audio = new Audio();
-    public _input = new Input();
-    public _programCounter: number = 512;
+    public memory = new Memory();
+    public registers = new Registers();
+    public stack = new Stack();
+    public frameBuffer = new FrameBuffer();
+    public audio = new Audio();
+    public input = new Input();
+    public programCounter: number = 512;
 
     public isRomLoaded: boolean = false;
 
@@ -27,18 +27,18 @@ export class Chip8Core {
     }
 
     insertRom(rom: Uint8Array) {
-        this._memory.loadRom(rom);
+        this.memory.loadRom(rom);
         this.isRomLoaded = true;
     }
 
     incrementProgramCounter() {
-        this._programCounter = (this._programCounter + 2) & 0x0FFF;
+        this.programCounter = (this.programCounter + 2) & 0x0FFF;
     }
 
     executeCycle() {
         if(!this.isHalted) {
             this.decrementTimers();
-            const currentOpCode: OpCode = this._memory.getOpCodeAt(this._programCounter);
+            const currentOpCode: OpCode = this.memory.getOpCodeAt(this.programCounter);
             
             currentOpCode.execute(this);
 
@@ -47,20 +47,20 @@ export class Chip8Core {
     }
 
     decrementTimers() {
-        if(this._registers.delayTimer > 0) {
-            this._registers.delayTimer -= 1;
+        if(this.registers.delayTimer > 0) {
+            this.registers.delayTimer -= 1;
         }
 
-        if(this._registers.soundTimer > 0) {
-            this._registers.soundTimer -= 1;
-            this._audio.play();
+        if(this.registers.soundTimer > 0) {
+            this.registers.soundTimer -= 1;
+            this.audio.play();
         } else {
-            this._audio.stop();
+            this.audio.stop();
         }
     }
 
     getFrame() {
-        return this._frameBuffer.currentFrame;
+        return this.frameBuffer.currentFrame;
     }
 
     haltForInput(vNum: number) {
@@ -70,21 +70,20 @@ export class Chip8Core {
 
     onKeyDown(keyNumber: number) {
         if(keyNumber < 16) {
-            this._input.setKey(keyNumber);
+            this.input.setKey(keyNumber);
         }
 
         if(this.isHalted) {
-            this._registers.setVRegister(this.tempVNum, keyNumber);
+            this.registers.setVRegister(this.tempVNum, keyNumber);
             this.isHalted = false;
         }
     }
 
     onKeyUp(keyNumber: number) {
         if(keyNumber < 16) {
-            this._input.unsetKey(keyNumber);
+            this.input.unsetKey(keyNumber);
         }
     }
-
 
     disassembleRom(rom: Uint8Array): OpCode[] {
         let opCodesArray: OpCode[] = [];
