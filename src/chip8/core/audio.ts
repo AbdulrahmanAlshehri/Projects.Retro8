@@ -5,8 +5,10 @@ export class Audio {
     oscillator: any;
 
     constructor() {
-        this.audioContext = new AudioContext();
+        if(this.isAudioContextSupported()) {
+            this.audioContext = new AudioContext();
 
+        }
     }
 
     public createOscillator() {
@@ -17,19 +19,33 @@ export class Audio {
     }
 
     public play(): void {
-        if (!this.oscillator) {
-            this.createOscillator();
-            if (this.oscillator) {
-                this.oscillator.start(0);
+        if(this.audioContext) {
+            if (!this.oscillator) {
+                this.createOscillator();
+                if (this.oscillator) {
+                    this.oscillator.start(0);
+                }
             }
         }
     }
 
     public stop(): void {
-        if (this.oscillator) {
-            this.oscillator.stop(0);
-            this.oscillator.disconnect(this.audioContext.destination);
-            this.oscillator = null;
+        if(this.audioContext) {
+            if (this.oscillator) {
+                this.oscillator.stop(0);
+                this.oscillator.disconnect(this.audioContext.destination);
+                this.oscillator = null;
+            }
+        }
+    }
+
+    isAudioContextSupported() {
+        let test = window.AudioContext;
+        if(test){
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }
