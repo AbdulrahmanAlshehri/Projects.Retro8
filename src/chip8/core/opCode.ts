@@ -61,19 +61,19 @@ export class OpCode implements IExecutable<Chip8Core>{
                 switch(hexNNN) {
                     case '0E0':
                         this.opCodeString = `CLS`;
-                        this.opCodeDescription = 'clear display';
+                        this.opCodeDescription = 'Clear display';
                         return (core: Chip8Core) => {
                             IS.clearDisplay(core);
                         };
                     case '0EE':
                         this.opCodeString = `RET`;
-                        this.opCodeDescription = 'return from subroutine';
+                        this.opCodeDescription = 'Return from subroutine';
                         return (core: Chip8Core) => {
                             IS.returnProc(core);
                         };
                     case '000':
                         this.opCodeString = `NOP`;
-                        this.opCodeDescription = 'no operation';
+                        this.opCodeDescription = 'No operation';
                         return (core: Chip8Core) => {
                             IS.noOperation(core);
                         };
@@ -82,43 +82,43 @@ export class OpCode implements IExecutable<Chip8Core>{
                 };
             case '1':
                 this.opCodeString = `JP ${hexNNN}`;
-                this.opCodeDescription = 'jump to NNN';
+                this.opCodeDescription = 'Jump to NNN';
                 return (core: Chip8Core) => {
                     IS.jump(core, NNN);
                 };
             case '2':
                 this.opCodeString = `CALL ${hexNNN}`;
-                this.opCodeDescription = 'call subroutine at NNN';
+                this.opCodeDescription = 'Call subroutine at NNN';
                 return (core: Chip8Core) => {
                     IS.call(core, NNN);
                 };
             case '3':
                 this.opCodeString = `SE v[${hexX}], ${hexNN}`;
-                this.opCodeDescription = 'skip if Vx == NN';
+                this.opCodeDescription = 'Skip if Vx == NN';
                 return (core: Chip8Core) => {
                     IS.skipIfVxEqualsNN(core, x, NN);
                 };
             case '4':
                 this.opCodeString = `SNE v[${hexX}], ${hexNN}`;
-                this.opCodeDescription = 'skip if Vx != NN';
+                this.opCodeDescription = 'Skip if Vx != NN';
                 return (core: Chip8Core) => {
                     IS.skipIfVxNotEqualsNN(core, x, NN);
                 };
             case '5':
                 this.opCodeString = `SE v[${hexX}], v[${hexY}]`;
-                this.opCodeDescription = 'skip if Vx == Vy';
+                this.opCodeDescription = 'Skip if Vx == Vy';
                 return (core: Chip8Core) => {
                     IS.skipIfVxEqualsVy(core, x, y);
                 };
             case '6':
                 this.opCodeString = `LD v[${hexX}], ${hexNN}`;
-                this.opCodeDescription = '';
+                this.opCodeDescription = 'Set Vx = NN';
                 return (core: Chip8Core) => {
                     IS.setVxTo(core, x, NN);
                 };
             case '7':
                 this.opCodeString = `ADD v[${hexX}], ${hexNN}`;
-                this.opCodeDescription = '';
+                this.opCodeDescription = 'Increment Vx By NN';
                 return (core: Chip8Core) => {
                     IS.incrementVxBy(core, x, NN);
                 };
@@ -126,7 +126,7 @@ export class OpCode implements IExecutable<Chip8Core>{
                 switch(insturction[3]) {
                     case '0':
                         this.opCodeString = `LD v[${hexX}], v[${hexY}]`;
-                        this.opCodeDescription = '';
+                        this.opCodeDescription = 'Set Vx = Vy';
                         return (core: Chip8Core) => {
                             IS.setVxEqualToVy(core, x, y);
                         };
@@ -188,8 +188,8 @@ export class OpCode implements IExecutable<Chip8Core>{
                     IS.skipIfVxNotEqualsVy(core, x, y);
                 };
             case 'A':
-                this.opCodeString = `LD I, ${hexNN}`;
-                this.opCodeDescription = '';
+                this.opCodeString = `LD I, ${hexNNN}`;
+                this.opCodeDescription = 'Set I = NNN';
                 return (core: Chip8Core) => {
                     IS.setI(core, NNN);
                 };
